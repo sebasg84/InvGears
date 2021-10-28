@@ -24,6 +24,9 @@ InvGears makes use of PartDesign to create bodies in which the gears are located
 ![](Resources/media/mainImage.png)
 
 
+A small example of how to use the workbench is presented in the following video
+https://youtu.be/lxtZ2gQRi88
+
 ## Installation
 
 
