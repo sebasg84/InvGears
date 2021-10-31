@@ -1,7 +1,7 @@
 # ***************************************************************************
 # *   Copyright (c) 2021 Sebastian Ernesto García <sebasg@outlook.com>      *
 # *                                                                         *
-# *   InitGui.py                                                            *
+# *   newMasterCmd.py                                                       *
 # *                                                                         *
 # *   This program is free software; you can redistribute it and/or modify  *
 # *   it under the terms of the GNU Lesser General Public License (LGPL)    *
@@ -21,42 +21,33 @@
 # *                                                                         *
 # ***************************************************************************
 
+import FreeCAD as App
 import FreeCADGui as Gui
 
+from PySide2.QtWidgets import QDialogButtonBox
 
-class InvGears(Workbench):
-    def __init__(self):
-        import local
-        self.__class__.Icon = local.path() + "/Resources/icons/master_gear.svg"
-        self.__class__.MenuText = "InvGears"
-        self.__class__.ToolTip = "InvGears workbench"
+import local
+from animator import Animator, AnimatorVP
+from widgets import GearWidget
 
-    def Initialize(self):
-        import newMasterCmd
-        import newSlaveCmd
-        import newSlaveMasterCmd
-        import newInternalCmd
-        import newSVGCmd
-        import newAnimatorCmd
 
-        self.list_commands = ["CreateMasterGear", "AddSlaveGear", "AddSlaveMasterGear", "CreateInternalGear", "CreateGearsInSVG", "Animator"]
+class makeAnimatorCmd():
+    def GetResources(self):
+        return {"MenuText": "Create an Animator",
+                "ToolTip": "Create a new animator",
+                "Pixmap": local.path() + "/Resources/icons/Animator.svg"}
 
-        self.appendToolbar("Involute Gears", self.list_commands)  # creates a new toolbar with your commands
-        self.appendMenu("Involute Gears", self.list_commands)  # creates a new menu
-        # self.appendMenu(["An existing Menu","My submenu"],self.list)  # appends a submenu to an existing menu
-        Log("Loading InvGears... done\n")
+    def IsActive(self):
+        if App.activeDocument() is None:
+            return False
+        else:
+            return True
 
     def Activated(self):
-        Msg("InvGears.Activated()\n")
-
-    def Deactivated(self):
-        Msg("InvGears.Deactivated()\n")
-
-    def ContextMenu(self, recipient):
-        self.appendContextMenu("Involute Gears", self.list_commands)  # add commands to the context menu
-
-    def GetClassName(self):
-        return "Gui::PythonWorkbench"
+        fp = App.activeDocument().addObject("App::FeaturePython","Animator")
+        Animator(fp)
+        AnimatorVP(fp.ViewObject)
+        fp.Proxy.setupVariables(fp)
 
 
-Gui.addWorkbench(InvGears())
+Gui.addCommand('Animator', makeAnimatorCmd())

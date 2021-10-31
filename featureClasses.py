@@ -235,23 +235,23 @@ class InternalGear():
 
         mainCalculations(inputData, cD, gear, pinion, True)
 
-        if not gear.FirstCond:
-            App.Console.PrintWarning("WARNING: Undercutting en 1 \n")
-        if not pinion.FirstCond:
-            App.Console.PrintWarning("WARNING: Undercutting en 2 \n")
+        # if not gear.FirstCond:
+        #     App.Console.PrintWarning("WARNING: Undercutting en 1 \n")
+        # if not pinion.FirstCond:
+        #     App.Console.PrintWarning("WARNING: Undercutting en 2 \n")
 
-        if not gear.SecondCond and gear.FirstCond:
-            App.Console.PrintWarning("WARNING: Interference en 1(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
-        if not pinion.SecondCond and pinion.FirstCond:
-            App.Console.PrintWarning("WARNING: Interference en 2(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
+        # if not gear.SecondCond and gear.FirstCond:
+        #     App.Console.PrintWarning("WARNING: Interference en 1(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
+        # if not pinion.SecondCond and pinion.FirstCond:
+        #     App.Console.PrintWarning("WARNING: Interference en 2(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
 
-        if not gear.ThirdCond:
-            App.Console.PrintWarning("WARNING: Third Condition. yc1_p = {}. Reducir rf o Cambiar valores \n".format(gear.yc_a))
-        if not pinion.ThirdCond:
-            App.Console.PrintWarning("WARNING: Third Condition. yc2_p = {}. Reducir rf o Cambiar valores \n".format(pinion.yc_a))
+        # if not gear.ThirdCond:
+        #     App.Console.PrintWarning("WARNING: Third Condition. yc1_p = {}. Reducir rf o Cambiar valores \n".format(gear.yc_a))
+        # if not pinion.ThirdCond:
+        #     App.Console.PrintWarning("WARNING: Third Condition. yc2_p = {}. Reducir rf o Cambiar valores \n".format(pinion.yc_a))
 
-        if not cD.fourthCond:
-            App.Console.PrintWarning("WARNING: Fourth Condition. mc = {} < 1.4 \n".format(cD.mc))
+        # if not cD.fourthCond:
+        #     App.Console.PrintWarning("WARNING: Fourth Condition. mc = {} < 1.4 \n".format(cD.mc))
 
         getProfile(gear, pinion, cD, True)
         getProfile(pinion, gear, cD)
@@ -389,23 +389,23 @@ class MasterGear():
 
         mainCalculations(inputData, cD, gear, pinion)
 
-        if not gear.FirstCond:
-            App.Console.PrintWarning("WARNING: Undercutting en 1 \n")
-        if not pinion.FirstCond:
-            App.Console.PrintWarning("WARNING: Undercutting en 2 \n")
+        # if not gear.FirstCond:
+        #     App.Console.PrintWarning("WARNING: Undercutting en 1 \n")
+        # if not pinion.FirstCond:
+        #     App.Console.PrintWarning("WARNING: Undercutting en 2 \n")
 
-        if not gear.SecondCond and gear.FirstCond:
-            App.Console.PrintWarning("WARNING: Interference en 1(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
-        if not pinion.SecondCond and pinion.FirstCond:
-            App.Console.PrintWarning("WARNING: Interference en 2(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
+        # if not gear.SecondCond and gear.FirstCond:
+        #     App.Console.PrintWarning("WARNING: Interference en 1(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
+        # if not pinion.SecondCond and pinion.FirstCond:
+        #     App.Console.PrintWarning("WARNING: Interference en 2(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
 
-        if not gear.ThirdCond:
-            App.Console.PrintWarning("WARNING: Third Condition. yc1_p = {}. Reducir rf o Cambiar valores \n".format(gear.yc_a))
-        if not pinion.ThirdCond:
-            App.Console.PrintWarning("WARNING: Third Condition. yc2_p = {}. Reducir rf o Cambiar valores \n".format(pinion.yc_a))
+        # if not gear.ThirdCond:
+        #     App.Console.PrintWarning("WARNING: Third Condition. yc1_p = {}. Reducir rf o Cambiar valores \n".format(gear.yc_a))
+        # if not pinion.ThirdCond:
+        #     App.Console.PrintWarning("WARNING: Third Condition. yc2_p = {}. Reducir rf o Cambiar valores \n".format(pinion.yc_a))
 
-        if not cD.fourthCond:
-            App.Console.PrintWarning("WARNING: Fourth Condition. mc = {} < 1.4 \n".format(cD.mc))
+        # if not cD.fourthCond:
+        #     App.Console.PrintWarning("WARNING: Fourth Condition. mc = {} < 1.4 \n".format(cD.mc))
 
         getProfile(gear, pinion, cD)
         getProfile(pinion, gear, cD)
@@ -454,8 +454,10 @@ class SlaveGear():
     def execute(self, fp):
         fp_master = fp.fp_master
 
-        if (fp.last_Placement.Base.distanceToPoint(fp.body_master.Placement.Base) < 0.000001 and
-                fp.last_Placement.Rotation.isSame(fp.body_master.Placement.Rotation, 0.000001)):
+        epsi = 0.000001
+        if (fp.last_Placement.Base.distanceToPoint(fp.body_master.Placement.Base) < epsi and
+                fp.last_Placement.Rotation.isSame(fp.body_master.Placement.Rotation, epsi)):
+
             Solid_p = getSlaveShape(fp_master)
             fp.Shape = Solid_p
 
@@ -577,8 +579,9 @@ class SlaveMasterGear():
         fp.addProperty('Part::PropertyPartShape', 'W_p', '6 - Slave gear data', 'Pinion Wire', 1)
 
     def execute(self, fp):
-        if (fp.last_Placement.Base.distanceToPoint(fp.body_master.Placement.Base) < 0.000001 and
-                fp.last_Placement.Rotation.isSame(fp.body_master.Placement.Rotation, 0.000001)):
+        epsi = 0.000001
+        if (fp.last_Placement.Base.distanceToPoint(fp.body_master.Placement.Base) < epsi and
+                fp.last_Placement.Rotation.isSame(fp.body_master.Placement.Rotation, epsi)):
             inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.deltaCs.Value, fp.c, fp.rk, fp.Bn.Value, fp.iL, fp.m_N, fp.s_N, fp.deltatp.Value, fp.n,
                                        fp.m_offset.Value, fp.s_offset.Value)
             cD = commonData()
@@ -587,23 +590,23 @@ class SlaveMasterGear():
 
             mainCalculations(inputData, cD, gear, pinion)
 
-            if not gear.FirstCond:
-                App.Console.PrintWarning("WARNING: Undercutting en 1 \n")
-            if not pinion.FirstCond:
-                App.Console.PrintWarning("WARNING: Undercutting en 2 \n")
+            # if not gear.FirstCond:
+            #     App.Console.PrintWarning("WARNING: Undercutting en 1 \n")
+            # if not pinion.FirstCond:
+            #     App.Console.PrintWarning("WARNING: Undercutting en 2 \n")
 
-            if not gear.SecondCond and gear.FirstCond:
-                App.Console.PrintWarning("WARNING: Interference en 1(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
-            if not pinion.SecondCond and pinion.FirstCond:
-                App.Console.PrintWarning("WARNING: Interference en 2(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
+            # if not gear.SecondCond and gear.FirstCond:
+            #     App.Console.PrintWarning("WARNING: Interference en 1(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
+            # if not pinion.SecondCond and pinion.FirstCond:
+            #     App.Console.PrintWarning("WARNING: Interference en 2(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
 
-            if not gear.ThirdCond:
-                App.Console.PrintWarning("WARNING: Third Condition. yc1_p = {}. Reducir rf o Cambiar valores \n".format(gear.yc_a))
-            if not pinion.ThirdCond:
-                App.Console.PrintWarning("WARNING: Third Condition. yc2_p = {}. Reducir rf o Cambiar valores \n".format(pinion.yc_a))
+            # if not gear.ThirdCond:
+            #     App.Console.PrintWarning("WARNING: Third Condition. yc1_p = {}. Reducir rf o Cambiar valores \n".format(gear.yc_a))
+            # if not pinion.ThirdCond:
+            #     App.Console.PrintWarning("WARNING: Third Condition. yc2_p = {}. Reducir rf o Cambiar valores \n".format(pinion.yc_a))
 
-            if not cD.fourthCond:
-                App.Console.PrintWarning("WARNING: Fourth Condition. mc = {} < 1.4 \n".format(cD.mc))
+            # if not cD.fourthCond:
+            #     App.Console.PrintWarning("WARNING: Fourth Condition. mc = {} < 1.4 \n".format(cD.mc))
 
             getProfile(gear, pinion, cD)
             getProfile(pinion, gear, cD)

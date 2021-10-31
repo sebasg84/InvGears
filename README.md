@@ -27,6 +27,7 @@ InvGears makes use of PartDesign to create bodies in which the gears are located
 A small example of how to use the workbench is presented in the following video
 https://youtu.be/lxtZ2gQRi88
 
+
 ## Installation
 
 
@@ -69,8 +70,7 @@ Copy InvGears folder into /Users/username/Library/Preferences/FreeCAD/Mod/ where
 
 ## Getting Started
 
-[Tutorial 1](Resources/tutorial/tutorial1.md)
-
+[a relative link](Resources/tutorial/tutorial1.md)
 
 ## References
 <a id="1">[1]</a> 

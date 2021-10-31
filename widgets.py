@@ -67,7 +67,7 @@ class GearWidget(QWidget):
             self.interfEdit = QLineEdit("0.025")
             self.gearLayout.addWidget(self.interfEdit, 4, 3, 1, 1, Qt.AlignLeft)
             self.gearLayout.addWidget(QLabel("Number of points for involute and fillet curves:"), 5, 0, 1, 1, Qt.AlignRight)
-            self.numPointsEdit = QLineEdit("20")
+            self.numPointsEdit = QLineEdit("10")
             self.gearLayout.addWidget(self.numPointsEdit, 5, 1, 1, 1, Qt.AlignLeft)
             if self.type != "SVG":
                 self.gearLayout.addWidget(QLabel("Gear height:"), 5, 2, 1, 1, Qt.AlignRight)
@@ -94,11 +94,11 @@ class GearWidget(QWidget):
             self.gearLayout.addWidget(QLabel("3d printing offset for slave gear:"), next_number, 2, 1, 1, Qt.AlignRight)
             self.offset_s_Edit = QLineEdit("0.0")
             self.gearLayout.addWidget(self.offset_s_Edit, next_number, 3, 1, 1, Qt.AlignLeft)
-            if self.type != "SVG":
+            if self.type != "SVG" and self.type != "SlaveMaster":
                 self.gearLayout.addWidget(QLabel("List with angular locations of slave gears:"), 8, 0, 1, 1, Qt.AlignRight)
                 self.list_angular_s_Edit = QLineEdit("")
                 self.gearLayout.addWidget(self.list_angular_s_Edit, 8, 1, 1, 3)
-            else:
+            elif self.type == "SVG":
                 self.gearLayout.addWidget(QLabel("Internal gear:"), 7, 0, 1, 1, Qt.AlignRight)
                 self.checkBox = QCheckBox()
                 self.checkBox.stateChanged.connect(self.onStatusChanged)
