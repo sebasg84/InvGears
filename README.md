@@ -69,7 +69,7 @@ Copy InvGears folder into /Users/username/Library/Preferences/FreeCAD/Mod/ where
 
 ## Getting Started
 
-..........
+[a relative link](Resources/tutorial/tutorial1.md)
 
 
 ## References
