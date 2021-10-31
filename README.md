@@ -1,6 +1,6 @@
 # FreeCAD InvGears workbench
 
-Current version 0.1.0
+Current version 0.1.1
 
 
 ## Overview
@@ -71,6 +71,15 @@ Copy InvGears folder into /Users/username/Library/Preferences/FreeCAD/Mod/ where
 ## Getting Started
 
 [a relative link](Resources/tutorial/tutorial1.md)
+
+
+## Release notes
+
+- 2021.10.31 (0.1.1)
+
+    Animator was added inside the workbench as a last button
+
+    Animator information is found at: https://github.com/mwganson/animator
 
 ## References
 <a id="1">[1]</a> 
