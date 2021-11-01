@@ -22,35 +22,36 @@
 # ***************************************************************************
 
 import FreeCADGui as Gui
+import FreeCAD as App
 
 
-class InvGears(Workbench):
+class InvGears(Gui.Workbench):
     def __init__(self):
-        import local
+        from freecad.invgears import local
         self.__class__.Icon = local.path() + "/Resources/icons/master_gear.svg"
         self.__class__.MenuText = "InvGears"
         self.__class__.ToolTip = "InvGears workbench"
 
     def Initialize(self):
-        import newMasterCmd
-        import newSlaveCmd
-        import newSlaveMasterCmd
-        import newInternalCmd
-        import newSVGCmd
-        import newAnimatorCmd
+        from freecad.invgears import newMasterCmd
+        from freecad.invgears import newSlaveCmd
+        from freecad.invgears import newSlaveMasterCmd
+        from freecad.invgears import newInternalCmd
+        from freecad.invgears import newSVGCmd
+        from freecad.invgears import newAnimatorCmd
 
         self.list_commands = ["CreateMasterGear", "AddSlaveGear", "AddSlaveMasterGear", "CreateInternalGear", "CreateGearsInSVG", "Animator"]
 
         self.appendToolbar("Involute Gears", self.list_commands)  # creates a new toolbar with your commands
         self.appendMenu("Involute Gears", self.list_commands)  # creates a new menu
         # self.appendMenu(["An existing Menu","My submenu"],self.list)  # appends a submenu to an existing menu
-        Log("Loading InvGears... done\n")
+        App.Console.PrintLog("Loading InvGears... done\n")
 
     def Activated(self):
-        Msg("InvGears.Activated()\n")
+        App.Console.PrintMessage("InvGears.Activated()\n")
 
     def Deactivated(self):
-        Msg("InvGears.Deactivated()\n")
+        App.Console.PrintMessage("InvGears.Deactivated()\n")
 
     def ContextMenu(self, recipient):
         self.appendContextMenu("Involute Gears", self.list_commands)  # add commands to the context menu

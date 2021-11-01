@@ -23,10 +23,10 @@
 
 import FreeCAD as App
 from Part import BSplineCurve, Wire, Arc, Face, makeShell, makeSolid, makeCylinder
-import local
+from freecad.invgears import local
 from numpy import pi, sin, cos
-from gears import inputDataClass, commonData, gearData, mainCalculations, getProfile
-from functions import loadProperties, commonextrusion, helicalextrusion, doblehelicalextrusion
+from freecad.invgears.gears import inputDataClass, commonData, gearData, mainCalculations, getProfile
+from freecad.invgears.functions import loadProperties, commonextrusion, helicalextrusion, doblehelicalextrusion
 
 
 def getInternalShape(fp, W, z=0.0, tita=0.0):

@@ -26,10 +26,10 @@ import FreeCADGui as Gui
 
 from PySide2.QtWidgets import QDialogButtonBox
 
-import local
-from featureClasses import SlaveGear, ViewProviderSlaveGear
-from widgets import GearWidget
-from observers import SelObserver
+from freecad.invgears import local
+from freecad.invgears.featureClasses import SlaveGear, ViewProviderSlaveGear
+from freecad.invgears.widgets import GearWidget
+from freecad.invgears.observers import SelObserver
 
 
 class createInvoluteGears2():

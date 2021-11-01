@@ -24,7 +24,7 @@
 import FreeCAD as App
 
 from numpy import zeros, linalg, array, sin, cos, dot, pi
-from gears import inputDataClass, commonData, gearData, mainCalculations, getProfile
+from freecad.invgears.gears import inputDataClass, commonData, gearData, mainCalculations, getProfile
 
 
 def controlPoints(p, t):

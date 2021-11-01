@@ -26,16 +26,53 @@ import FreeCADGui as Gui
 
 from PySide2.QtWidgets import QDialogButtonBox
 
-import local
-from animator import Animator, AnimatorVP
-from widgets import GearWidget
+from freecad.invgears import local
+from freecad.invgears.featureClasses import MasterGear, SlaveGear, ViewProviderMasterGear, ViewProviderSlaveGear
+from freecad.invgears.widgets import GearWidget
 
 
-class makeAnimatorCmd():
+class createInvoluteGears():
+    def __init__(self, widget):
+
+        body_master = App.activeDocument().addObject('PartDesign::Body', 'body_master')
+        fp_master = App.activeDocument().addObject("PartDesign::FeaturePython", "fp_master")
+        ViewProviderMasterGear(fp_master.ViewObject)
+        MasterGear(fp_master, body_master, widget)
+        App.activeDocument().recompute()
+
+        list_s_gear = "[" + widget.list_angular_s_Edit.text() + "]"
+        if list_s_gear:
+            for item in eval(list_s_gear):
+                body_slave = App.activeDocument().addObject('PartDesign::Body', 'body_slave')
+                fp_slave = App.activeDocument().addObject("PartDesign::FeaturePython", "fp_slave")
+                ViewProviderSlaveGear(fp_slave.ViewObject)
+                SlaveGear(fp_slave, body_slave, fp_master, item)
+                App.activeDocument().recompute()
+
+        Gui.SendMsgToActiveView("ViewFit")
+
+
+class MasterGearTaskPanel:
+    def __init__(self):
+        self.form = GearWidget("Master")
+        print(type(self))
+
+    def accept(self):
+        createInvoluteGears(self.form)
+        Gui.Control.closeDialog()
+
+    def reject(self):
+        Gui.Control.closeDialog()
+
+    def getStandardButtons(self):
+        return QDialogButtonBox.Cancel | QDialogButtonBox.Ok
+
+
+class makeMasterGearCmd():
     def GetResources(self):
-        return {"MenuText": "Create an Animator",
-                "ToolTip": "Create a new animator",
-                "Pixmap": local.path() + "/Resources/icons/Animator.svg"}
+        return {"MenuText": "Create Master Gear",
+                "ToolTip": "Create a new master gear",
+                "Pixmap": local.path() + "/Resources/icons/master_gear.svg"}
 
     def IsActive(self):
         if App.activeDocument() is None:
@@ -44,10 +81,8 @@ class makeAnimatorCmd():
             return True
 
     def Activated(self):
-        fp = App.activeDocument().addObject("App::FeaturePython","Animator")
-        Animator(fp)
-        AnimatorVP(fp.ViewObject)
-        fp.Proxy.setupVariables(fp)
+        panel = MasterGearTaskPanel()
+        Gui.Control.showDialog(panel)
 
 
-Gui.addCommand('Animator', makeAnimatorCmd())
+Gui.addCommand('CreateMasterGear', makeMasterGearCmd())
