@@ -35,7 +35,7 @@ class makeAnimatorCmd():
     def GetResources(self):
         return {"MenuText": "Create an Animator",
                 "ToolTip": "Create a new animator",
-                "Pixmap": local.path() + "/Resources/icons/Animator.svg"}
+                "Pixmap": "Animator"}
 
     def IsActive(self):
         if App.activeDocument() is None:

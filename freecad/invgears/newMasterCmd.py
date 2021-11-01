@@ -72,7 +72,7 @@ class makeMasterGearCmd():
     def GetResources(self):
         return {"MenuText": "Create Master Gear",
                 "ToolTip": "Create a new master gear",
-                "Pixmap": local.path() + "/Resources/icons/master_gear.svg"}
+                "Pixmap": "master_gear"}
 
     def IsActive(self):
         if App.activeDocument() is None:

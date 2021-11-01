@@ -77,7 +77,7 @@ class makeInternalGearCmd():
     def GetResources(self):
         return {"MenuText": "Create Internal Gear",
                 "ToolTip": "Create a new internal gear",
-                "Pixmap": local.path() + "/Resources/icons/internal_gear.svg"}
+                "Pixmap": "internal_gear"}
 
     def IsActive(self):
         if App.activeDocument() is None:

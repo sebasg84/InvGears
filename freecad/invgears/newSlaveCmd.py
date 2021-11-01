@@ -85,7 +85,7 @@ class makeSlaveGearCmd():
     def GetResources(self):
         return {"MenuText": "Add Slave Gear",
                 "ToolTip": "Add a new slave gear",
-                "Pixmap": local.path() + "/Resources/icons/slave_gear.svg"}
+                "Pixmap": "slave_gear"}
 
     def IsActive(self):
         if App.activeDocument() is None:

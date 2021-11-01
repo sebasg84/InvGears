@@ -108,7 +108,7 @@ class makeGearsInSVGCmd():
     def GetResources(self):
         return {"MenuText": "Create Gears in SVG file",
                 "ToolTip": "Create a new Gears in SVG file",
-                "Pixmap": local.path() + "/Resources/icons/SVG_gears.svg"}
+                "Pixmap": "SVG_gears"}
 
     def IsActive(self):
         if App.activeDocument() is None:

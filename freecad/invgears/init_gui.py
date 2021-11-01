@@ -23,12 +23,13 @@
 
 import FreeCADGui as Gui
 import FreeCAD as App
+from . import InvGears_rc
 
 
 class InvGears(Gui.Workbench):
     def __init__(self):
         from freecad.invgears import local
-        self.__class__.Icon = local.path() + "/Resources/icons/master_gear.svg"
+        self.__class__.Icon = ":/icons/master_gear.svg"
         self.__class__.MenuText = "InvGears"
         self.__class__.ToolTip = "InvGears workbench"
 

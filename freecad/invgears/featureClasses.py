@@ -128,7 +128,7 @@ class ViewProviderInternalGear():
         self.vobj = vobj
 
     def getIcon(self):
-        return(local.path() + "/Resources/icons/internal_gear.svg")
+        return ":/icons/internal_gear.svg"
 
     def __getstate__(self):
         return None
@@ -283,7 +283,7 @@ class ViewProviderMasterGear():
         self.vobj = vobj
 
     def getIcon(self):
-        return(local.path() + "/Resources/icons/master_gear.svg")
+        return ":/icons/master_gear.svg"
 
     def __getstate__(self):
         return None
@@ -428,7 +428,7 @@ class ViewProviderSlaveGear():
         self.vobj = vobj
 
     def getIcon(self):
-        return(local.path() + "/Resources/icons/slave_gear.svg")
+        return ":/icons/slave_gear.svg"
 
     def __getstate__(self):
         return None
@@ -475,7 +475,7 @@ class ViewProviderSlaveMasterGear():
         self.vobj = vobj
 
     def getIcon(self):
-        return(local.path() + "/Resources/icons/slave-master_gear.svg")
+        return ":/icons/slave-master_gear.svg"
 
     def __getstate__(self):
         return None
