@@ -26,9 +26,9 @@ import FreeCADGui as Gui
 
 from PySide2.QtWidgets import QDialogButtonBox
 
-import local
-from featureClasses import InternalGear, SlaveGear, ViewProviderInternalGear, ViewProviderSlaveGear
-from widgets import GearWidget
+from freecad.invgears import local
+from freecad.invgears.featureClasses import InternalGear, SlaveGear, ViewProviderInternalGear, ViewProviderSlaveGear
+from freecad.invgears.widgets import GearWidget
 
 
 class createInvoluteGears4():
@@ -77,7 +77,7 @@ class makeInternalGearCmd():
     def GetResources(self):
         return {"MenuText": "Create Internal Gear",
                 "ToolTip": "Create a new internal gear",
-                "Pixmap": local.path() + "/Resources/icons/internal_gear.svg"}
+                "Pixmap": "internal_gear"}
 
     def IsActive(self):
         if App.activeDocument() is None:

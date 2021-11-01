@@ -26,10 +26,10 @@ import FreeCADGui as Gui
 
 from PySide2.QtWidgets import QDialogButtonBox, QFileDialog
 
-import local
-from svgFile import GearsInSVG
-from widgets import GearWidget
-from observers import SelObserver
+from freecad.invgears import local
+from freecad.invgears.svgFile import GearsInSVG
+from freecad.invgears.widgets import GearWidget
+from freecad.invgears.observers import SelObserver
 
 
 class createInvoluteGears5():
@@ -108,7 +108,7 @@ class makeGearsInSVGCmd():
     def GetResources(self):
         return {"MenuText": "Create Gears in SVG file",
                 "ToolTip": "Create a new Gears in SVG file",
-                "Pixmap": local.path() + "/Resources/icons/SVG_gears.svg"}
+                "Pixmap": "SVG_gears"}
 
     def IsActive(self):
         if App.activeDocument() is None:
