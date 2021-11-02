@@ -167,8 +167,8 @@ class GearsInSVG():
                     '<svg xmlns="http://www.w3.org/2000/svg"\n' +\
                     'version="1.1" width="{}mm" height="{}mm">\n'.format(width, height) +\
                     '<g transform="scale(3.78)">\n' +\
-                    '<path d="' + circle_svg_path + gear_svg_path + '" fill="rgb(210, 130, 50)" />\n' +\
-                    '<path d="' + pinion_svg_path + '" fill="rgb(50, 130, 210)" />\n' +\
+                    '<path d="' + circle_svg_path + gear_svg_path + '" style="fill:none;fill-opacity:1;stroke-width:0.2;stroke:#000000;stroke-opacity:1;stroke-miterlimit:4" />\n' +\
+                    '<path d="' + pinion_svg_path + '" style="fill:none;fill-opacity:1;stroke-width:0.2;stroke:#000000;stroke-opacity:1;stroke-miterlimit:4" />\n' +\
                     '</g>' +\
                     '</svg>\n'
 
