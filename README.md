@@ -17,7 +17,7 @@ On the other hand, it is possible to create gears in an SVG file independently. 
 
 InvGears makes use of PartDesign to create bodies in which the gears are located. This allows the gears to be modified using PartDesign.
 
-![](Resources/media/mainImage.png)
+![](freecad/invgears/Resources/media/mainImage.png)
 
 A small example of how to use the workbench is presented in the following video
 https://youtu.be/lxtZ2gQRi88
@@ -88,7 +88,7 @@ Por otro lado, es posible crear engranajes en un archivo SVG de forma independie
 
 InvGears hace uso de PartDesign para crear cuerpos en los que se ubican los engranajes. Esto permite modificar los engranajes utilizando PartDesign.
 
-![](Resources/media/mainImage.png)
+![](freecad/invgears/Resources/media/mainImage.png)
 
 Un pequeño ejemplo de cómo usar el banco de trabajo se presenta en el siguiente video https://youtu.be/lxtZ2gQRi88
 
