@@ -56,7 +56,7 @@ Copy InvGears folder into /Users/username/Library/Preferences/FreeCAD/Mod/ where
 
 ## Getting Started
 
-[Tutorial #1](Resources/tutorial/tutorial1.md)
+[Tutorial #1](freecad/invgears/Resources/tutorial/tutorial1.md)
 
 ## Release notes
 
@@ -126,7 +126,7 @@ Copie la carpeta InvGears en /Users/username/Library/Preferences/FreeCAD/Mod/ do
 
 ## Empezando
 
-[Tutorial #1](Resources/tutorial/tutorial1.md)
+[Tutorial #1](freecad/invgears/Resources/tutorial/tutorial1.md)
 
 ## Notas de lanzamiento
 
