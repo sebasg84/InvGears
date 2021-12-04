@@ -59,9 +59,9 @@ Copy InvGears folder into /Users/username/Library/Preferences/FreeCAD/Mod/ where
 
 ## Getting Started
 
-[Tutorial #1](Resources/tutorial/tutorial1.md)
+[Tutorial #1](freecad/invgears/Resources/tutorial/tutorial1.md)
 
-[Tutorial #2](Resources/tutorial/tutorial2.md)
+[Tutorial #2](freecad/invgears/Resources/tutorial/tutorial2.md)
 
 ## Release notes
 - 2021.12.04 (0.1.2)
@@ -142,9 +142,9 @@ Copie la carpeta InvGears en /Users/username/Library/Preferences/FreeCAD/Mod/ do
 
 ## Empezando
 
-[Tutorial #1](Resources/tutorial/tutorial1.md)
+[Tutorial #1](freecad/invgears/Resources/tutorial/tutorial1.md)
 
-[Tutorial #2](Resources/tutorial/tutorial2.md)
+[Tutorial #2](freecad/invgears/Resources/tutorial/tutorial2.md)
 
 ## Notas de lanzamiento
 
