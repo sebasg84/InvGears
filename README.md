@@ -83,7 +83,7 @@ Colbourne, John R. The geometry of involute gears. Springer Science & Business M
 
 ## Acknowledgments
 
-I want to thank the Telegram group ["FreeCAD en español"](https://t.me/FreeCAD_Es), and give a special thanks to Maxi, Juan Manuel y Pepe for their suggestions and corrections
+I want to thank the Telegram group ["FreeCAD en español"](https://t.me/FreeCAD_Es), and give a special thanks to Maxi, Juan Manuel and Pepe for their suggestions and corrections
 
 ******************************************************************************************************************
 
