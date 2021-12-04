@@ -67,78 +67,79 @@ def drawArc(p, x=0.0, y=0.0):
 
 
 class GearsInSVG():
-    def __init__(self, widget, filename):
-        self.m = float(widget.mEdit.text())
-        self.phi_s = float(widget.phi_sEdit.text())
-        self.N_m = int(widget.N_m_Edit.text())
-        self.N_s = int(widget.N_s_Edit.text())
-        self.c = float(widget.cEdit.text())
-        self.rk = float(widget.rfEdit.text())
-        self.deltaCs = float(widget.deltaCEdit.text())
-        self.deltatp = float(widget.deltaTpEdit.text())
-        self.Bn = float(widget.BnEdit.text())
-        self.iL = float(widget.interfEdit.text())
-        self.n = int(widget.numPointsEdit.text())
-        self.offset_m = float(widget.offset_m_Edit.text())
-        self.offset_s = float(widget.offset_s_Edit.text())
+    def __init__(self, form, filename):
+        m = form[1].doubleSpinBox.value()
+        phi_s = form[1].doubleSpinBox_2.value()
+        N_m = form[1].spinBox.value()
+        N_s = form[1].spinBox_2.value()
+        Bl = form[1].doubleSpinBox_3.value()
 
-        inputData = inputDataClass(self.m, self.phi_s, self.deltaCs, self.c, self.rk, self.Bn, self.iL, self.N_m, self.N_s, self.deltatp, self.n, self.offset_m, self.offset_s)
+        c = form[2].doubleSpinBox.value()
+        deltaCs = form[2].doubleSpinBox_2.value()
+        deltatp = form[2].doubleSpinBox_3.value()
+        offset_m = form[2].doubleSpinBox_4.value()
+        offset_s = form[2].doubleSpinBox_5.value()
+        n = form[2].spinBox.value()
+        iL = form[2].doubleSpinBox_6.value()
+
+        inputData = inputDataClass(m, phi_s, N_m, N_s, Bl, c, deltaCs, deltatp, offset_m, offset_s, n, iL)
         cD = commonData()
-        gear = gearData()
-        pinion = gearData()
+        master = gearData()
+        slave = gearData()
 
-        if widget.checkBox.isChecked():
-            mainCalculations(inputData, cD, gear, pinion, True)
-            cD.C = abs(gear.Rp - pinion.Rp)
-            angle = pinion.beta0 - pi + pi / self.N_s
+        
+        if form[1].checkBox.isChecked():
+            mainCalculations(inputData, cD, master, slave, True)
+            cD.C = abs(master.Rp - slave.Rp)
+            angle = slave.beta0 - pi + pi / N_s
         else:
-            mainCalculations(inputData, cD, gear, pinion)
-            angle = pinion.beta0
+            mainCalculations(inputData, cD, master, slave)
+            angle = slave.beta0
 
-        if not gear.FirstCond:
+        if not master.FirstCond:
             App.Console.PrintWarning("WARNING: Undercutting en 1 \n")
-        if not pinion.FirstCond:
+        if not slave.FirstCond:
             App.Console.PrintWarning("WARNING: Undercutting en 2 \n")
 
-        if not gear.SecondCond and gear.FirstCond:
+        if not master.SecondCond and master.FirstCond:
             App.Console.PrintWarning("WARNING: Interference en 1(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
-        if not pinion.SecondCond and pinion.FirstCond:
+        if not slave.SecondCond and slave.FirstCond:
             App.Console.PrintWarning("WARNING: Interference en 2(Second Condition). Reducir rf, Incrementar deltaC o Cambiar valores \n")
 
-        if not gear.ThirdCond:
-            App.Console.PrintWarning("WARNING: Third Condition. yc1_p = {}. Reducir rf o Cambiar valores \n".format(gear.yc_a))
-        if not pinion.ThirdCond:
-            App.Console.PrintWarning("WARNING: Third Condition. yc2_p = {}. Reducir rf o Cambiar valores \n".format(pinion.yc_a))
+        if not master.ThirdCond:
+            App.Console.PrintWarning("WARNING: Third Condition. master.tita_Tc = {}. Reducir rf o Cambiar valores \n".format(master.tita_Tc))
+        if not slave.ThirdCond:
+            App.Console.PrintWarning("WARNING: Third Condition. slave.tita_Tc = {}. Reducir rf o Cambiar valores \n".format(slave.tita_Tc))
 
         if not cD.fourthCond:
             App.Console.PrintWarning("WARNING: Fourth Condition. mc = {} < 1.4 \n".format(cD.mc))
 
         x = 0
         y = 0
-        if widget.checkBox.isChecked():
-            getProfile(gear, pinion, cD, True)
-            r = gear.RTc + float(widget.thicknessEdit.text())
+        if form[1].checkBox.isChecked():
+            getProfile(master, slave, cD, True)
+            r = master.RTc + form[1].doubleSpinBox_7.value()
             x = r
             y = r
             circle_svg_path = "M{},{} m{},0 a{},{},0,0,1,{},0 a{},{},0,0,1,{},0\n".format(x, y, -r, r, r, 2 * r, r, r, - 2 * r)
         else:
-            getProfile(gear, pinion, cD)
-            x = gear.RT
-            y = gear.RT
+            getProfile(master, slave, cD)
+            x = master.RT
+            y = master.RT
             circle_svg_path = ""
 
-        getProfile(pinion, gear, cD)
+        getProfile(slave, master, cD)
 
         ###############################################################
         ##################Master Gear Shape Creation###################
         ###############################################################
         index = 1
-        gear_svg_path = "M{},{}".format(gear.profile[0][0, 0] + x, -gear.profile[0][1, 0] + y)
-        for profile in gear.profile:
+        master_svg_path = "M{},{}".format(master.profile[0][0, 0] + x, -master.profile[0][1, 0] + y)
+        for profile in master.profile:
             if index % 3 == 0:
-                gear_svg_path = gear_svg_path + drawArc(profile, x, y)
+                master_svg_path = master_svg_path + drawArc(profile, x, y)
             else:
-                gear_svg_path = gear_svg_path + drawBezierCurve(profile, x, y)
+                master_svg_path = master_svg_path + drawBezierCurve(profile, x, y)
             index = index + 1
         ##############################################################################
 
@@ -148,27 +149,27 @@ class GearsInSVG():
         index = 1
         x = x + cD.C
         M = array([[cos(angle), -sin(angle)], [sin(angle), cos(angle)]])
-        pinion_profile = list(map(lambda x: dot(M, x), pinion.profile))
-        pinion_svg_path = "M{},{}".format(pinion_profile[0][0, 0] + x, -pinion_profile[0][1, 0] + y)
-        for profile in pinion_profile:
+        slave_profile = list(map(lambda x: dot(M, x), slave.profile))
+        slave_svg_path = "M{},{}".format(slave_profile[0][0, 0] + x, -slave_profile[0][1, 0] + y)
+        for profile in slave_profile:
             if index % 3 == 0:
-                pinion_svg_path = pinion_svg_path + drawArc(profile, x, y)
+                slave_svg_path = slave_svg_path + drawArc(profile, x, y)
             else:
-                pinion_svg_path = pinion_svg_path + drawBezierCurve(profile, x, y)
+                slave_svg_path = slave_svg_path + drawBezierCurve(profile, x, y)
             index = index + 1
         ###############################################################
-        if widget.checkBox.isChecked():
+        if form[1].checkBox.isChecked():
             height = 2 * y
             width = height
         else:
-            width = cD.C + gear.RT + pinion.RT
-            height = 2 * gear.RT
+            width = cD.C + master.RT + slave.RT
+            height = 2 * master.RT
         svg_string = '<?xml version="1.0" standalone="no"?>\n' +\
                     '<svg xmlns="http://www.w3.org/2000/svg"\n' +\
                     'version="1.1" width="{}mm" height="{}mm">\n'.format(width, height) +\
                     '<g transform="scale(3.78)">\n' +\
-                    '<path d="' + circle_svg_path + gear_svg_path + '" style="fill:none;fill-opacity:1;stroke-width:0.2;stroke:#000000;stroke-opacity:1;stroke-miterlimit:4" />\n' +\
-                    '<path d="' + pinion_svg_path + '" style="fill:none;fill-opacity:1;stroke-width:0.2;stroke:#000000;stroke-opacity:1;stroke-miterlimit:4" />\n' +\
+                    '<path d="' + circle_svg_path + master_svg_path + '" style="fill:none;fill-opacity:1;stroke-width:0.2;stroke:#000000;stroke-opacity:1;stroke-miterlimit:4" />\n' +\
+                    '<path d="' + slave_svg_path + '" style="fill:none;fill-opacity:1;stroke-width:0.2;stroke:#000000;stroke-opacity:1;stroke-miterlimit:4" />\n' +\
                     '</g>' +\
                     '</svg>\n'
 

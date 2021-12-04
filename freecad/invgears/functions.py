@@ -2,7 +2,7 @@
 # ***************************************************************************
 # *   Copyright (c) 2021 Sebastian Ernesto García <sebasg@outlook.com>      *
 # *                                                                         *
-# *   functions.py                                                            *
+# *   functions.py                                                          *
 # *                                                                         *
 # *   This program is free software; you can redistribute it and/or modify  *
 # *   it under the terms of the GNU Lesser General Public License (LGPL)    *
@@ -23,67 +23,8 @@
 # ***************************************************************************
 
 import FreeCAD as App
-from Part import makeHelix, makeSolid, makeShell, Face
-from numpy import pi
-
-
-def loadProperties(fp, cD, gear, pinion):
-    fp.phi_p.Value = cD.phi_p * 180 / pi
-    fp.inv_phi_s.Value = cD.inv_phi_s * 180 / pi
-    fp.inv_phi_p.Value = cD.inv_phi_p * 180 / pi
-    fp.Cs.Value = cD.Cs
-    fp.C.Value = cD.C
-    fp.ps.Value = cD.ps
-    fp.pp.Value = cD.pp
-    fp.pb.Value = cD.pb
-    fp.pd.Value = cD.pd
-    fp.rcT.Value = cD.rcT
-    fp.B.Value = cD.B
-    fp.mc = cD.mc
-    fp.FourthCond = cD.FourthCond
-
-    fp.m_Rs.Value = gear.Rs
-    fp.m_Rp.Value = gear.Rp
-    fp.m_Rb.Value = gear.Rb
-    fp.m_RT.Value = gear.RT
-    fp.m_Rroot.Value = gear.Rroot
-    fp.m_RL.Value = gear.RL
-    fp.m_Rf.Value = gear.Rf
-    fp.m_Ru.Value = gear.Ru
-    fp.m_ts.Value = gear.ts
-    fp.m_tp.Value = gear.tp
-    fp.m_tb.Value = gear.tb
-    fp.m_tT.Value = gear.tT
-    fp.m_e.Value = gear.e
-    fp.m_as.Value = gear.as_
-    fp.m_ap.Value = gear.ap
-    fp.m_bs.Value = gear.bs
-    fp.m_bp.Value = gear.bp
-    fp.m_FirstCond = gear.FirstCond
-    fp.m_SecondCond = gear.SecondCond
-    fp.m_ThirdCond = gear.ThirdCond
-
-    fp.s_Rs.Value = pinion.Rs
-    fp.s_Rp.Value = pinion.Rp
-    fp.s_Rb.Value = pinion.Rb
-    fp.s_RT.Value = pinion.RT
-    fp.s_Rroot.Value = pinion.Rroot
-    fp.s_RL.Value = pinion.RL
-    fp.s_Rf.Value = pinion.Rf
-    fp.s_Ru.Value = pinion.Ru
-    fp.s_ts.Value = pinion.ts
-    fp.s_tp.Value = pinion.tp
-    fp.s_tb.Value = pinion.tb
-    fp.s_tT.Value = pinion.tT
-    fp.s_e.Value = pinion.e
-    fp.s_as.Value = pinion.as_
-    fp.s_ap.Value = pinion.ap
-    fp.s_bs.Value = pinion.bs
-    fp.s_bp.Value = pinion.bp
-    fp.s_angle.Value = pinion.beta0 * 180 / pi
-    fp.s_FirstCond = pinion.FirstCond
-    fp.s_SecondCond = pinion.SecondCond
-    fp.s_ThirdCond = pinion.ThirdCond
+from Part import makeHelix, makeSolid, makeShell, Wire, Face, Arc, BSplineCurve, makeSphere, Point, makeLoft
+from numpy import pi, sin, cos, arctan, array, sqrt
 
 
 def commonextrusion(wire, height, vPos=App.Vector(0, 0, 0), orientation=0):
@@ -113,3 +54,125 @@ def doblehelicalextrusion(wire, height, angle, vPos=App.Vector(0, 0, 0), orienta
     faces = [f for f in faces if not (abs(f.CenterOfMass.z - (vPos.z + height / 2)) < 0.001)]
     solid = makeSolid(makeShell(faces))
     return solid
+
+
+def getMasterShape(fp, W, z=0.0, tita=0.0):
+    thickness = fp.thickness.Value
+    if fp.gearType == "Spur":
+        Solid = commonextrusion(W, thickness, App.Vector(0, 0, z), tita)
+    if fp.gearType == "Helical":
+        helicalAngle = fp.helicalPortion * (2 * pi / fp.N_m)
+        Solid = helicalextrusion(W, thickness, helicalAngle, App.Vector(0, 0, z), tita)
+    if fp.gearType == "Doble Helical":
+        helicalAngle = fp.helicalPortion * (2 * pi / fp.N_m)
+        Solid = doblehelicalextrusion(W, thickness, helicalAngle, App.Vector(0, 0, z), tita)
+    return Solid
+
+
+def getSlaveShape(fp_master):
+    thickness = fp_master.thickness.Value
+    W = fp_master.W_s.copy()
+    if fp_master.gearType == "Spur":
+        Solid = commonextrusion(W, thickness)
+    if fp_master.gearType == "Helical":
+        helicalAngle = -fp_master.helicalPortion * (2 * pi / fp_master.N_s)
+        Solid = helicalextrusion(W, thickness, helicalAngle)
+    if fp_master.gearType == "Doble Helical":
+        helicalAngle = -fp_master.helicalPortion * (2 * pi / fp_master.N_s)
+        Solid = doblehelicalextrusion(W, thickness, helicalAngle)
+    return Solid
+
+
+def getInternalShape(fp, W, z=0.0, tita=0.0):
+    thickness = fp.thickness.Value
+    if fp.gearType == "Spur":
+        Solid = commonextrusion(W, thickness, App.Vector(0, 0, z), tita)
+    if fp.gearType == "Helical":
+        helicalAngle = - fp.helicalPortion * (2 * pi / fp.N_m)
+        Solid = helicalextrusion(W, thickness, helicalAngle, App.Vector(0, 0, z), tita)
+    if fp.gearType == "Doble Helical":
+        helicalAngle = - fp.helicalPortion * (2 * pi / fp.N_m)
+        Solid = doblehelicalextrusion(W, thickness, helicalAngle, App.Vector(0, 0, z), tita)
+    return Solid
+
+
+def getBevelShape(fp, W, slave=False):
+    if slave is True:
+        W = fp.W_s.copy()
+    s1 = makeSphere(fp.lambda_.Value, App.Vector(0, 0, 0))
+    s2 = makeSphere(fp.lambda_.Value + fp.thickness.Value, App.Vector(0, 0, 0))
+    s3=s2.cut(s1)
+
+    origin_vertex = Point(App.Vector(0,0,0)).toShape()
+
+    loft = makeLoft([W, origin_vertex], True)
+
+    solid = s3.common(loft)
+    return solid
+
+
+def getWire(gear):
+    S = []
+    index = 1
+    for profile in gear.profile:
+        if index % 3 == 0:
+            arc = Arc(*list(map(lambda x, y: App.Vector(x, y, 0.0), profile[0, :], profile[1, :])))
+            S.append(arc.toShape())
+        else:
+            curve = BSplineCurve()
+            curve.interpolate(list(map(lambda x, y: App.Vector(x, y, 0.0), profile[0, :], profile[1, :])))
+            S.append(curve.toShape())
+        index = index + 1
+    W = Wire(S)
+    return W
+
+
+def getBevelWire(gear):
+    S = []
+    index = 1
+    for profile in gear.profile_onPlane:
+        if index % 3 == 0:
+            arc = Arc(*list(map(lambda x, y, z: App.Vector(x, y, z), profile[0, :], profile[1, :], profile[2, :])))
+            S.append(arc.toShape())
+        else:
+            curve = BSplineCurve()
+            curve.interpolate(list(map(lambda x, y, z: App.Vector(x, y, z), profile[0, :], profile[1, :], profile[2, :])))
+            S.append(curve.toShape())
+        index = index + 1
+    W = Wire(S)
+    return W
+
+
+def updatePosition(fp):
+    fp_master = fp.fp_master
+    body = fp._Body
+    beta = fp.beta.Value
+    angle_s = fp_master.angle_s.Value
+    body_master_angle = fp_master._Body.Placement.Rotation.Angle * 180 / pi
+
+    if fp_master.Proxy.Type == "masterGear" or fp_master.Proxy.Type == "masterBevelGear":
+        angle = angle_s + (beta - body_master_angle) * (fp_master.N_m / fp_master.N_s)
+    elif fp_master.Proxy.Type == "slaveMasterGear":
+        tita = fp_master.tita.Value
+        angle = angle_s + (beta - tita - body_master_angle) * (fp_master.N_m / fp_master.N_s)
+    elif fp_master.Proxy.Type == "internalGear":
+        angle = angle_s + (-beta + body_master_angle) * (fp_master.N_m / fp_master.N_s)
+    
+    body.Placement = App.Placement(App.Vector(0, 0, 0), App.Rotation(App.Vector(0, 0, 1), angle))
+
+
+def getPartFromFPMaster(fp):
+    for part in fp._Body.InList:
+        if part.Type == "Part_Master" or part.Type == "Part_Slave_Master" or part.Type == "Part_Internal":
+            return part
+
+
+def getPartFromFPSlave(fp):
+    for part in fp._Body.InList:
+        if part.Type == "Part_Slave" or part.Type == "Part_Slave_Master":
+            return part
+
+def getPartFromFPBevelSlave(fp):
+    for part in fp._Body.InList:
+        if part.Type == "Part_Slave_Bevel":
+            return part

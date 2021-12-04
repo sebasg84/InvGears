@@ -22,77 +22,128 @@
 # ***************************************************************************
 
 from dataclasses import dataclass
-from numpy import NaN, pi, sqrt, sin, cos, tan, arcsin, arccos, arctan, linspace, array, size, dot
+from numpy import NaN, pi, sqrt, sin, cos, tan, arcsin, arccos, arctan, linspace, array, size, dot, copysign
 from numpy.core.shape_base import hstack, vstack
 from numpy.linalg import norm
 
 
+def brent(func, gear1, pinion, cD, a, b, xtol=1e-8, rtol=1.e-12, maxIter=100):
+    fa = func(gear1, pinion, cD, a)
+    fb = func(gear1, pinion, cD, b)
+    if (fa > 0 and fb > 0) or (fa < 0 and fb < 0):
+       return -1
+    c = b
+    fc = fb
+    for i in range(maxIter):
+        if ( fb > 0 and fc > 0) or (fb < 0 and fc < 0):
+            c = a
+            fc = fa
+            d = b - a
+            e = d
+        if abs(fc) < abs(fb):
+            a = b
+            b = c
+            c = a
+            fa = fb
+            fb = fc
+            fc = fa
+        tol1 = 2 * rtol * abs(b) + 0.5 * xtol
+        xm = 0.5 * (c-b)
+        if abs(xm) <= tol1 or fb == 0:
+            return b
+        if abs(e) >= tol1 and abs(fa) > abs(fb):
+            s = fb / fa
+            if a == c:
+                p = 2 * xm * s
+                q = 1 - s
+            else:
+                q = fa / fc
+                r = fb / fc
+                p = s * (2 * xm * q * (q - r) - (b - a) * (r - 1))
+                q = (q - 1) * (r - 1) * (s - 1)
+            if p > 0:
+                q = -q
+            p = abs(p)
+            if 2 * p < min(3 * xm * q - abs(tol1 * q), abs(e * q)):
+                e = d
+                d = p / q
+            else:
+                d = xm
+                e = d
+        else:
+            d = xm
+            e = d
+        a = b
+        fa = fb
+        if abs(d) > tol1:
+            b = b + d
+        else:
+            b = b + copysign(tol1, xm)
+        fb = func(gear1, pinion, cD, b)
+    return b
+
+
 class getProfile():
 
-    def __init__(self, gear, pinion, cD, internal=False):
+    def __init__(self, gear1, gear2, cD, internal=False):
 
-        i_ps, i_norm = self.__involute(gear, cD, internal)
-        f_ps, f_norm = self.__fillet(gear, pinion, cD)
+        i_ps, i_norm = self.__involute(gear1, cD, internal)
+        f_ps, f_norm = self.__fillet(gear1, gear2, cD)
 
-        middle_p = (i_ps[:, -1] + f_ps[:, 0]) / 2
-        i_ps[:, -1] = middle_p
-        f_ps[:, 0] = middle_p
+        i_ps, f_ps = self.__fusionpoint(i_ps, f_ps)
 
         if internal:
-            RTg = gear.RTc
+            RT1 = gear1.RTc
         else:
-            RTg = gear.RT
+            RT1 = gear1.RT
 
-        Rroot = gear.Rroot
+        Rroot1 = gear1.Rroot
 
-        if(abs(gear.offset) > 0.00001):
-            i_ps = i_ps - gear.offset * i_norm
-            f_ps = f_ps - gear.offset * f_norm
-            RTg = RTg - gear.offset
-            Rroot = Rroot - gear.offset
+        if(abs(gear1.offset) > 0.00001):
+            i_ps = i_ps - gear1.offset * i_norm
+            f_ps = f_ps - gear1.offset * f_norm
+            RT1 = RT1 - gear1.offset
+            Rroot1 = Rroot1 - gear1.offset
 
             inter_p, i_index, f_index = self.__intersection(i_ps, f_ps)
 
             if(i_index == -1):
-                middle_p = (i_ps[:, -1] + f_ps[:, 0]) / 2
-                i_ps[:, -1] = middle_p
-                f_ps[:, 0] = middle_p
-
+                i_ps, f_ps = self.__fusionpoint(i_ps, f_ps)
             else:
                 i_ps = hstack((i_ps[:, :i_index], inter_p))
                 f_ps = hstack((inter_p, f_ps[:, f_index:]))
             
-            inter_p, index = self.__tipIntersection(i_ps, RTg)
+            inter_p, index = self.__tipIntersection(i_ps, RT1)
             i_ps = hstack((inter_p, i_ps[:, index:]))
 
         M = array([[1, 0], [0, -1]])
         i_ps_rev = dot(M, i_ps[:, ::-1])
         f_ps_rev = dot(M, f_ps[:, ::-1])
-        tip_ps = hstack((i_ps_rev[:, [-1]], vstack([RTg, 0]), i_ps[:, [0]]))
+        tip_ps = hstack((i_ps_rev[:, [-1]], vstack([RT1, 0]), i_ps[:, [0]]))
 
-        tita0 = gear.tita_Rroot
-        titaf = 2 * pi / gear.N - tita0
+        tita0 = gear1.tita_Rroot
+        titaf = 2 * pi / gear1.N - tita0
         tita = linspace(tita0, titaf, 3)
-        x = Rroot * cos(tita)
-        y = Rroot * sin(tita)
+        x = Rroot1 * cos(tita)
+        y = Rroot1 * sin(tita)
         root_ps = vstack([x, y])
 
         tooth_profile = [f_ps_rev, i_ps_rev, tip_ps, i_ps, f_ps, root_ps]
-        gear.tooth_profile = tooth_profile
+        gear1.tooth_profile = tooth_profile
 
-        angle = 2 * pi / gear.N
+        angle = 2 * pi / gear1.N
         M = array([[cos(angle), -sin(angle)], [sin(angle), cos(angle)]])
         profile = tooth_profile
         aux_profile = tooth_profile
-        for i in range(gear.N - 1):
+        for i in range(gear1.N - 1):
             aux_profile = list(map(lambda x: dot(M, x), aux_profile))
             profile.extend(aux_profile)
 
-        gear.profile = profile
+        gear1.profile = profile
 
-    def __tipIntersection(self, i_ps, RTg):
+    def __tipIntersection(self, i_ps, RT1):
         for i in range(size(i_ps, 1)):
-            if norm(i_ps[:, i + 1]) < RTg:
+            if norm(i_ps[:, i + 1]) < RT1:
                 index = i
                 break
 
@@ -102,7 +153,7 @@ class getProfile():
         mxA = m * xA
         a = (1 + m**2)
         b = 2 * m * (yA - mxA)
-        c = yA**2 + mxA**2 - 2 * yA * mxA - RTg**2
+        c = yA**2 + mxA**2 - 2 * yA * mxA - RT1**2
         x = (-b + sqrt(b**2 - 4 * a * c)) / (2 * a)
         y = yA + m * (x - xA)
         inter_p = vstack([x, y])
@@ -134,21 +185,17 @@ class getProfile():
 
         return -1, -1, -1
 
-    def __involute(self, gear, cD, internal):
+    def __involute(self, gear1, cD, internal):
         if internal:
-            RTg = gear.RTc
+            RT1 = gear1.RTc
         else:
-            RTg = gear.RT
-        Rc_r = gear.Rc_r
-        Rbg = gear.Rb
-        tbg = gear.tb
-        n = cD.n
-        R = linspace(RTg, Rc_r, n)
-        phi_R = arccos(Rbg / R)
-        inv_phi_R = sqrt(R**2 - Rbg**2) / Rbg - phi_R
-        tita_R = tbg / (2 * Rbg) - inv_phi_R
+            RT1 = gear1.RT
+        R = linspace(RT1, gear1.Rc, cD.n)
+        phi_R = arccos(gear1.Rb / R)
+        psi_R = sqrt(R**2 - gear1.Rb**2) / gear1.Rb - phi_R
+        tita_R = gear1.tb / (2 * gear1.Rb) - psi_R
 
-        diff_tita_R = -sqrt(R**2 - Rbg**2) / (R * Rbg)
+        diff_tita_R = -sqrt(R**2 - gear1.Rb**2) / (R * gear1.Rb)
 
         x = array(R * cos(tita_R))
         y = array(R * sin(tita_R))
@@ -161,72 +208,34 @@ class getProfile():
         points = vstack([x, y])
         normal = vstack([xn, yn])
 
-        gear.tita_RT = tita_R[0]
+        gear1.tita_RT = tita_R[0]
 
         return points, normal
 
-    def __fillet(self, gear, pinion, cD):
-        N = gear.N
-        Rsg = gear.Rs
-        Rpg = gear.Rp
-        Rc_l = gear.Rc_l
-        FirstCond = gear.FirstCond
-        Rc_a = pinion.Rc_a
-        tita_c_a = pinion.tita_c_a
-        Rpc = pinion.Rp
-        Rsc = pinion.Rs
-        Rbc = pinion.Rb
-        phi_p = cD.phi_p
-        ps = cD.ps
-        rcT = cD.rcT
-        n = cD.n
-
-        if not FirstCond:
-            alpha = 0
-            epsilon = 0.001 * pi / N
-            while True:
-                xi_a = Rpc - Rc_a * cos(alpha)
-                eta_a = -Rc_a * sin(alpha)
-                s_a = - sqrt(xi_a**2 + eta_a**2)
-                s = s_a - rcT
-                xi = (s / s_a) * xi_a
-                eta = (s / s_a) * eta_a
-                R = sqrt((Rpg + xi)**2 + eta**2)
-                if R > Rc_l:
-                    alpha0 = alpha - epsilon
-                    break
-                alpha = alpha + epsilon
+    def __fillet(self, gear1, gear2, cD):
+        if not gear1.FirstCond:
+            alpha0 = brent(self.__RComparation, gear1, gear2, None, 0, pi / 2)
         else:
-            alpha0 = arccos(Rbc / Rc_a) - phi_p
+            alpha0 = arccos(gear2.Rb / gear2.RTc) - cD.phi_p
 
         alphaf = 0.0
-        alpha = linspace(alpha0, alphaf, n)
-        xi_a = Rpc - Rc_a * cos(alpha)
-        eta_a = -Rc_a * sin(alpha)
-        s_a = - sqrt(xi_a**2 + eta_a**2)
-        s = s_a - rcT
-        xi = (s / s_a) * xi_a
-        eta = (s / s_a) * eta_a
+        alpha = linspace(alpha0, alphaf, cD.n)
+        xi = gear2.Rp - gear2.RTc * cos(alpha)
+        eta = -gear2.RTc * sin(alpha)
 
-        betac = alpha - tita_c_a
-        betag = - (Rsc * betac + (ps / 2)) / Rsg
+        betac = alpha - gear2.tita_Tc
+        betag = - (gear2.Rs * betac + (cD.ps / 2)) / gear1.Rs
 
-        R = sqrt((Rpg + xi)**2 + eta**2)
-        tita_R = arctan(eta / (Rpg + xi)) - betag
+        R = sqrt((gear1.Rp + xi)**2 + eta**2)
+        tita_R = arctan(eta / (gear1.Rp + xi)) - betag
 
-        diff_xi_a = Rc_a * sin(alpha)
-        diff_eta_a = -Rc_a * cos(alpha)
+        diff_xi = gear2.RTc * sin(alpha)
+        diff_eta = -gear2.RTc * cos(alpha)
 
-        diff_s_a = - (xi_a * diff_xi_a + eta_a * diff_eta_a) / sqrt(xi_a**2 + eta_a**2)
-        diff_s = diff_s_a
+        diff_betag = - gear2.Rs / gear1.Rs
 
-        diff_xi = ((diff_s * s_a - s * diff_s_a) / (s_a**2)) * xi_a + (s / s_a) * diff_xi_a
-        diff_eta = ((diff_s * s_a - s * diff_s_a) / (s_a**2)) * eta_a + (s / s_a) * diff_eta_a
-
-        diff_betag = - Rsc / Rsg
-
-        diff_R = ((Rpg + xi) * diff_xi + eta * diff_eta) / sqrt((Rpg + xi)**2 + eta**2)
-        diff_tita_R = (diff_eta * (Rpg + xi) - eta * diff_xi) / ((Rpg + xi)**2 + eta**2) - diff_betag
+        diff_R = ((gear1.Rp + xi) * diff_xi + eta * diff_eta) / sqrt((gear1.Rp + xi)**2 + eta**2)
+        diff_tita_R = (diff_eta * (gear1.Rp + xi) - eta * diff_xi) / ((gear1.Rp + xi)**2 + eta**2) - diff_betag
 
         x = array(R * cos(tita_R))
         y = array(R * sin(tita_R))
@@ -239,187 +248,190 @@ class getProfile():
         points = vstack([x, y])
         normal = vstack([xn, yn])
 
-        gear.tita_Rroot = tita_R[-1]
+        gear1.tita_Rroot = tita_R[-1]
 
         return points, normal
 
+    def __RComparation(self, gear1, gear2, cD, alpha):
+        xi = gear2.Rp - gear2.RTc * cos(alpha)
+        eta = -gear2.RTc * sin(alpha)
+        R = sqrt((gear1.Rp + xi)**2 + eta**2)
+        return R - gear1.Rc
+
+    def __fusionpoint(self, i_ps, f_ps):
+        fusion_p = (i_ps[:, -1] + f_ps[:, 0]) / 2
+        i_ps[:, -1] = fusion_p
+        f_ps[:, 0] = fusion_p
+        return i_ps, f_ps
+
 
 class mainCalculations():
-    def __init__(self, inputData, cD, gear, pinion, internal=False):
+    def __init__(self, inputData, cD, gear1, gear2, internal=False):
 
         self.__get_load_commonData1(cD, inputData)
 
-        self.__get_load_gearData1(gear, cD, inputData.Ng, inputData.m_offset, inputData.deltatp)
-        self.__get_load_gearData1(pinion, cD, inputData.Np, inputData.s_offset, -gear.deltatp)
+        if internal:
+            self.__get_load_gearData1(gear1, cD, inputData.N_m, -inputData.offset_m, -inputData.deltatp)
+        else:
+            self.__get_load_gearData1(gear1, cD, inputData.N_m, inputData.offset_m, inputData.deltatp)
 
-        self.__get_load_commonData2(cD, gear, pinion)
+        self.__get_load_gearData1(gear2, cD, inputData.N_s, inputData.offset_s, -inputData.deltatp)
 
-        self.__get_load_gearData2(gear, pinion, cD)
-        self.__get_load_gearData2(pinion, gear, cD)
+        self.__get_load_commonData2(cD, gear1, gear2)
 
-        gear.beta0 = 0.0
-        pinion.beta0 = pi - ((gear.tp + pinion.tp) / 2 + gear.Rp * gear.beta0) / pinion.Rp
+        self.__get_load_gearData2(gear1, gear2, cD, internal)
+        self.__get_load_gearData2(gear2, gear1, cD)
 
-        self.__get_load_gearData3(gear, pinion, cD)
-        self.__get_load_gearData3(pinion, gear, cD)
+        gear1.beta0 = 0.0
+        gear2.beta0 = pi - ((gear1.tp + gear2.tp) / 2 + gear1.Rp * gear1.beta0) / gear2.Rp
 
-        self.__get_load_gearData4(gear, pinion, cD)
-        self.__get_load_gearData4(pinion, gear, cD, internal)
+        self.__get_load_gearData3(gear1, gear2, cD)
+        self.__get_load_gearData3(gear2, gear1, cD)
 
-        self.__get_load_gearData5(gear, pinion, cD)
-        self.__get_load_gearData5(pinion, gear, cD)
+        self.__get_load_gearData4(gear1, gear2, cD)
+        self.__get_load_gearData4(gear2, gear1, cD, internal)
 
-        self.__get_load_gearData6(gear, pinion, cD)
-        self.__get_load_gearData6(pinion, gear, cD)
+        self.__get_load_gearData5(gear1, gear2, cD)
+        self.__get_load_gearData5(gear2, gear1, cD)
 
-        self.__get_load_commonData3(cD, gear, pinion)
+        self.__get_load_gearData6(gear1, gear2, cD)
+        self.__get_load_gearData6(gear2, gear1, cD)
+
+        self.__get_load_commonData3(cD, gear1, gear2)
 
     def __get_load_commonData1(self, cD, inputData):
         cD.m = inputData.m
         cD.phi_s = inputData.phi_s * pi / 180
-        cD.deltaCs = inputData.deltaCs
+        cD.Bl = inputData.Bl
         cD.c = inputData.c
-        cD.rk = inputData.rk
-        cD.Bn = inputData.Bn
-        cD.iL = inputData.iL
+        cD.deltaCs = inputData.deltaCs
         cD.n = inputData.n
+        cD.iL = inputData.iL
+        
         cD.ps = pi * cD.m
         cD.pb = cD.ps * cos(cD.phi_s)
         cD.pd = 1 / cD.m
-        cD.rcT = cD.rk * cD.m
 
-    def __get_load_gearData1(self, gear, cD, N, offset, deltatp):
-        gear.N = N
-        gear.offset = offset
-        gear.deltatp = deltatp
-        gear.Rs = gear.N * cD.m / 2
-        gear.Rb = gear.Rs * cos(cD.phi_s)
+    def __get_load_gearData1(self, gear1, cD, N, offset, deltatp):
+        gear1.N = N
+        gear1.offset = offset
+        gear1.deltatp = deltatp
+        gear1.Rs = gear1.N * cD.m / 2
+        gear1.Rb = gear1.Rs * cos(cD.phi_s)
 
-    def __get_load_commonData2(self, cD, gear, pinion):
-        cD.C = (gear.N + pinion.N) * cD.m / 2 + cD.deltaCs
-        cD.Cs = gear.Rs + pinion.Rs
-        RbplusRb = gear.Rb + pinion.Rb
+    def __get_load_commonData2(self, cD, gear1, gear2):
+        cD.C = (gear1.N + gear2.N) * cD.m / 2 + cD.deltaCs
+        cD.Cs = gear1.Rs + gear2.Rs
+        RbplusRb = gear1.Rb + gear2.Rb
         cD.phi_p = arccos((RbplusRb) / cD.C)
-        cD.inv_phi_p = sqrt((cD.C / RbplusRb)**2 - 1) - cD.phi_p
-        cD.inv_phi_s = sqrt((cD.Cs / RbplusRb)**2 - 1) - cD.phi_s
-        cD.pp = 2 * pi * cD.C / (gear.N + pinion.N)
-        cD.B = cD.Bn / cos(cD.phi_p)
+        cD.psi_p = sqrt((cD.C / RbplusRb)**2 - 1) - cD.phi_p
+        cD.psi_s = sqrt((cD.Cs / RbplusRb)**2 - 1) - cD.phi_s
+        cD.pp = 2 * pi * cD.C / (gear1.N + gear2.N)
+        cD.B = cD.Bl / cos(cD.phi_p)
 
-    def __get_load_gearData2(self, gear, pinion, cD):
-        gear.Rp = gear.N * cD.C / (gear.N + pinion.N)
-        gear.tp = (cD.pp - cD.B) / 2 + gear.deltatp
-        gear.tb = gear.Rb * (gear.tp / gear.Rp + 2 * cD.inv_phi_p)
-        gear.ts = gear.Rs * (gear.tb / gear.Rb - 2 * cD.inv_phi_s)
-        gear.e = (gear.ts - cD.ps / 2) / (2 * tan(cD.phi_s))
+    def __get_load_gearData2(self, gear1, gear2, cD, internal=False):
+        gear1.Rp = gear1.N * cD.C / (gear1.N + gear2.N)
+        if internal is True:
+            gear1.tp = (cD.pp + cD.B) / 2 + gear1.deltatp
+        else:
+            gear1.tp = (cD.pp - cD.B) / 2 + gear1.deltatp
+        gear1.tb = gear1.Rb * (gear1.tp / gear1.Rp + 2 * cD.psi_p)
+        gear1.ts = gear1.Rs * (gear1.tb / gear1.Rb - 2 * cD.psi_s)
+        gear1.e = (gear1.ts - cD.ps / 2) / (2 * tan(cD.phi_s))
 
-    def __get_load_gearData3(self, gear, pinion, cD):
-        gear.ap = cD.m - (gear.Rp - pinion.Rp - gear.Rs + pinion.Rs - gear.e + pinion.e) / 2
-        gear.RT = gear.Rp + gear.ap
+    def __get_load_gearData3(self, gear1, gear2, cD):
+        gear1.ap = cD.m - (gear1.Rp - gear2.Rp - gear1.Rs + gear2.Rs - gear1.e + gear2.e) / 2
+        gear1.RT = gear1.Rp + gear1.ap
 
-    def __get_load_gearData4(self, gear, pinion, cD, internal=False):
-        gear.tpc = cD.pp - pinion.tp
-        gear.tbc = gear.Rb * (gear.tpc / gear.Rp + 2 * cD.inv_phi_p)
-        gear.tsc = gear.Rs * (gear.tbc / gear.Rb - 2 * cD.inv_phi_s)
+    def __get_load_gearData4(self, gear1, gear2, cD, internal=False):
+        gear1.tpc = cD.pp - gear2.tp
+        gear1.tbc = gear1.Rb * (gear1.tpc / gear1.Rp + 2 * cD.psi_p)
+        gear1.tsc = gear1.Rs * (gear1.tbc / gear1.Rb - 2 * cD.psi_s)
 
         if internal:
-            gear.RTc = gear.RT
+            gear1.RTc = gear1.RT
         else:
-            gear.RTc = gear.RT + cD.c * cD.m
-        gear.apc = gear.RTc - gear.Rp
+            gear1.RTc = gear1.RT + cD.c * cD.m
+        gear1.apc = gear1.RTc - gear1.Rp
 
-        gear.Rc_a = gear.RTc - cD.rcT
+        gear2.Rroot = cD.C - gear1.RTc
 
-        gear.Rhc = sqrt(gear.Rb**2 + (sqrt(gear.Rc_a**2 - gear.Rb**2) + cD.rcT)**2)
+        gear1.phi_Tc = arccos(gear1.Rb / gear1.RTc)
+        gear1.psi_Tc = sqrt(gear1.RTc**2 - gear1.Rb**2) / gear1.Rb - gear1.phi_Tc
 
-        pinion.Rroot = cD.C - gear.RTc
+        gear1.tita_Tc = gear1.tsc / (2 * gear1.Rs) + cD.psi_s - gear1.psi_Tc
 
-        gear.phi_hc = arccos(gear.Rb / gear.Rhc)
-        gear.inv_phi_hc = sqrt(gear.Rhc**2 - gear.Rb**2) / gear.Rb - gear.phi_hc
-
-        gear.tita_hc = gear.tsc / (2 * gear.Rs) + cD.inv_phi_s - gear.inv_phi_hc
-        gear.gamma_hc = gear.phi_hc - gear.tita_hc
-
-        gear.xc_a = gear.Rhc * cos(gear.tita_hc) - cD.rcT * sin(gear.gamma_hc)
-        gear.yc_a = gear.Rhc * sin(gear.tita_hc) - cD.rcT * cos(gear.gamma_hc)
-
-        gear.tita_c_a = arctan(gear.yc_a / gear.xc_a)
-        if gear.yc_a > 0:
-            gear.ThirdCond = True
+        if gear1.tita_Tc > 0:
+            gear1.ThirdCond = True
         else:
-            gear.ThirdCond = False
+            gear1.ThirdCond = False
 
-    def __get_load_gearData5(self, gear, pinion, cD):
-        if (cD.C**2 - gear.Rb**2 - 2 * gear.Rb * pinion.Rb - pinion.RT**2) > 0:
-            gear.FirstCond = True
+    def __get_load_gearData5(self, gear1, gear2, cD):
+        if (cD.C**2 - gear1.Rb**2 - 2 * gear1.Rb * gear2.Rb - gear2.RT**2) > 0:
+            gear1.FirstCond = True
         else:
-            gear.FirstCond = False
-        RbplusRb = gear.Rb + pinion.Rb
-        gear.RL = sqrt(gear.Rb**2 + (sqrt(cD.C**2 - (RbplusRb)**2) - sqrt(pinion.RT**2 - pinion.Rb**2))**2)
-        gear.Rf = sqrt(gear.Rb**2 + (sqrt(cD.C**2 - (RbplusRb)**2) - sqrt(pinion.Rhc**2 - pinion.Rb**2))**2)
-        if gear.Rf < gear.RL - cD.iL * cD.m:
-            gear.SecondCond = True
+            gear1.FirstCond = False
+        RbplusRb = gear1.Rb + gear2.Rb
+        gear1.RL = sqrt(gear1.Rb**2 + (sqrt(cD.C**2 - (RbplusRb)**2) - sqrt(gear2.RT**2 - gear2.Rb**2))**2)
+        gear1.Rf = sqrt(gear1.Rb**2 + (sqrt(cD.C**2 - (RbplusRb)**2) - sqrt(gear2.RTc**2 - gear2.Rb**2))**2)
+        if gear1.Rf < gear1.RL - cD.iL * cD.m:
+            gear1.SecondCond = True
         else:
-            gear.SecondCond = False
+            gear1.SecondCond = False
 
-    def __get_load_gearData6(self, gear, pinion, cD):
-        if not gear.FirstCond:
-            R = gear.Rb
-            while True:
-                phi_R = arccos(gear.Rb / R)
-                inv_phi_R = sqrt(R**2 - gear.Rb**2) / gear.Rb - phi_R
-                tita_R = gear.tb / (2 * gear.Rb) - inv_phi_R
-
-                betac = arccos((cD.C**2 + pinion.Rhc**2 - R**2) / (2 * cD.C * pinion.Rhc)) - pinion.tita_hc
-                betag = - (pinion.Rs * betac + cD.ps / 2) / gear.Rs
-                tita_R_d = - arcsin((pinion.Rhc / R) * sin(betac + pinion.tita_hc)) - betag
-
-                if tita_R_d > tita_R:
-                    gear.Ru = R
-                    break
-                R = R + 0.001 * cD.m
-            gear.Rc_r = gear.Ru
-            gear.Rc_l = gear.Ru - 0.001 * cD.m
+    def __get_load_gearData6(self, gear1, gear2, cD):
+        if not gear1.FirstCond:
+            gear1.Ru = brent(self.__titaComparation, gear1, gear2, cD, gear1.Rb, gear1.Rp)
+            gear1.Rc = gear1.Ru
         else:
-            gear.Ru = NaN
-            gear.Rc_r = gear.Rf
-            gear.Rc_l = gear.Rf
+            gear1.Ru = NaN
+            gear1.Rc = gear1.Rf
 
-    def __get_load_commonData3(self, cD, gear, pinion):
-        if not gear.FirstCond:
-            cD.mc = (sqrt(gear.RT**2 - gear.Rb**2) - sqrt(gear.Ru**2 - gear.Rb**2)) / cD.pb
-        if not pinion.FirstCond:
-            mc2 = (sqrt(pinion.RT**2 - pinion.Rb**2) - sqrt(pinion.Ru**2 - pinion.Rb**2)) / cD.pb
-            if not gear.FirstCond:
+    def __get_load_commonData3(self, cD, gear1, gear2):
+        if not gear1.FirstCond:
+            cD.mc = (sqrt(gear1.RT**2 - gear1.Rb**2) - sqrt(gear1.Ru**2 - gear1.Rb**2)) / cD.pb
+        if not gear2.FirstCond:
+            mc2 = (sqrt(gear2.RT**2 - gear2.Rb**2) - sqrt(gear2.Ru**2 - gear2.Rb**2)) / cD.pb
+            if not gear1.FirstCond:
                 if mc2 < cD.mc:
                     cD.mc = mc2
             else:
                 cD.mc = mc2
-        if gear.FirstCond and pinion.FirstCond:
-            RbplusRb = gear.Rb + pinion.Rb
-            cD.mc = (sqrt(gear.RT**2 - gear.Rb**2) + sqrt(pinion.RT**2 - pinion.Rb**2) - sqrt(cD.C**2 - (RbplusRb)**2)) / cD.pb
+        if gear1.FirstCond and gear2.FirstCond:
+            RbplusRb = gear1.Rb + gear2.Rb
+            cD.mc = (sqrt(gear1.RT**2 - gear1.Rb**2) + sqrt(gear2.RT**2 - gear2.Rb**2) - sqrt(cD.C**2 - (RbplusRb)**2)) / cD.pb
 
         if cD.mc > 1.4:
             cD.fourthCond = True
         else:
             cD.fourthCond = False
 
+    def __titaComparation(self, gear1, gear2, cD, R):
+        phi_R = arccos(gear1.Rb / R)
+        psi_R = sqrt(R**2 - gear1.Rb**2) / gear1.Rb - phi_R
+        tita_R = gear1.tb / (2 * gear1.Rb) - psi_R
+
+        betac = arccos((cD.C**2 + gear2.RTc**2 - R**2) / (2 * cD.C * gear2.RTc)) - gear2.tita_Tc
+        betag = - (gear2.Rs * betac + cD.ps / 2) / gear1.Rs
+        tita_R_a = - arcsin((gear2.RTc / R) * sin(betac + gear2.tita_Tc)) - betag
+
+        return tita_R_a - tita_R
+
 
 @dataclass
 class inputDataClass:
     m: float
     phi_s: float
-    deltaCs: float
+    N_m: int
+    N_s: int
+    Bl: float
     c: float
-    rk: float
-    Bn: float
-    iL: float
-    Ng: int
-    Np: int
+    deltaCs: float
     deltatp: float
+    offset_m: float
+    offset_s: float
     n: int
-    m_offset: float
-    s_offset: float
-
+    iL: float
 
 @dataclass
 class commonData:
@@ -430,9 +442,9 @@ class commonData:
     # Standard pressure angle (rad)
     phi_s: float = 0.0
     # Involute function of phi_p (rad)
-    inv_phi_p: float = 0.0
+    psi_p: float = 0.0
     # Involute function of phi_s (rad)
-    inv_phi_s: float = 0.0
+    psi_s: float = 0.0
     # Center Distance (mm)
     C: float = 0.0
     # Center Standard Distance (mm)
@@ -449,14 +461,10 @@ class commonData:
     pd: float = 0.0
     # Clearance (mm)
     c: float = 0.0
-    # Cutter Tip Corner Radius Constant
-    rk: float = 0.0
-    # Cutter Tip Corner Radius (mm)
-    rcT: float = 0.0
     # Circular Backlash (mm)
     B: float = 0.0
     # Backlash along the common normal (mm)
-    Bn: float = 0.0
+    Bl: float = 0.0
     # Limit of second Interference
     iL: float = 0.0
     # Contact Ratio
@@ -488,10 +496,8 @@ class gearData:
     Rf: float = 0.0
     # Undercut Circle Radius (mm)
     Ru: float = 0.0
-    # If FirsCond is true Rc_r=Rf, else Rc_r=Ru + delta
-    Rc_r: float = 0.0
-    # If FirsCond is true Rc_l=Rf, else Rc_l=Ru - delta
-    Rc_l: float = 0.0
+    # If FirsCond is true Rc=Rf, else Rc=Ru
+    Rc: float = 0.0
     # Tip Circle Radius for cutter(mm)
     RTc: float = 0.0
     # Tooth thickness at the pitch circle
@@ -528,22 +534,14 @@ class gearData:
     beta0: float = 0.0
     # Angular Pitch
     deltaTitap: float = 0.0
-    # Radius in hc (mm)
-    Rhc: float = 0.0
-    # Presure angle in hc (rad)
-    phi_hc: float = 0.0
-    # Involute function in hc (rad)
-    inv_phi_hc: float = 0.0
-    # Tita in hc (rad)
-    tita_hc: float = 0.0
-    # gamma in hc (rad)
-    gamma_hc: float = 0.0
-    # Coordenada polar tita del putno Ac'
-    Rc_a: float = 0.0
-    tita_c_a: float = 0.0
-    # Coordenadas Cartesianas del Punto Ac'
-    xc_a: float = 0.0
-    yc_a: float = 0.0
+    # Radius in Tc (mm)
+    RTc: float = 0.0
+    # Presure angle in Tc (rad)
+    phi_Tc: float = 0.0
+    # Involute function in Tc (rad)
+    psi_Tc: float = 0.0
+    # Tita in Tc (rad)
+    tita_Tc: float = 0.0
     # Angle where tip curve finish
     tita_RT: float = 0.0
     # Angle where root curve start

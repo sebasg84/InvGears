@@ -26,50 +26,30 @@ import FreeCADGui as Gui
 
 from PySide2.QtWidgets import QDialogButtonBox
 
-from freecad.invgears import local
 from freecad.invgears.featureClasses import SlaveGear, ViewProviderSlaveGear
-from freecad.invgears.widgets import GearWidget
 from freecad.invgears.observers import SelObserver
-
-
-class createInvoluteGears2():
-    def __init__(self, fp_master, angle_list):
-
-        list_s_gear = "[" + angle_list + "]"
-        if list_s_gear:
-            for item in eval(list_s_gear):
-                body_slave = App.activeDocument().addObject('PartDesign::Body', 'body_slave')
-                fp_slave = App.activeDocument().addObject("PartDesign::FeaturePython", "fp_slave")
-                ViewProviderSlaveGear(fp_slave.ViewObject)
-                SlaveGear(fp_slave, body_slave, fp_master, item)
-                App.activeDocument().recompute()
-
-        Gui.SendMsgToActiveView("ViewFit")
 
 
 class SlaveGearTaskPanel:
     def __init__(self):
-        self.form = GearWidget("Slave", self.attach_master_gear)
-        self.master_gear_Button = self.form.master_gear_Button
-        self.master_gear_Edit = self.form.master_gear_Edit
-        self.print_warnings = self.form.print_warnings
-        self.sel_o = SelObserver(self.master_gear_Button, self.master_gear_Edit, self.print_warnings)
-
+        self.form = [Gui.PySideUic.loadUi(":/ui/slaves.ui")]
+        self.form[0].pushButton.clicked.connect(self.attach_master_gear)
+        self.sel_o = SelObserver(self.form[0].pushButton, self.form[0].lineEdit, self.form[0].label_2)
         self.attach_master_gear()
 
     def attach_master_gear(self):
-        self.master_gear_Button.setText("Selecting master gear...")
-        self.master_gear_Button.setEnabled(False)
+        self.form[0].pushButton.setText("Selecting FP_Master...")
+        self.form[0].pushButton.setEnabled(False)
         self.sel_o.addSelection(0, 0, 0, 0)
 
     def accept(self):
-        angle_list = self.form.list_angular_s_Edit2.text()
+        angle_list = self.form[0].lineEdit_2.text()
         if not self.sel_o.sel_flag:
-            self.print_warnings.setText("First you have to choose a master gear and then click on ok.")
+            self.form[0].label_2.setText("First you have to choose a master gear and then click on ok.")
         elif not angle_list:
-            self.print_warnings.setText("First you have to put angular locations and then click on ok.")
+            self.form[0].label_2.setText("First you have to put angular locations and then click on ok.")
         else:
-            createInvoluteGears2(self.sel_o.selection, angle_list)
+            self.createInvoluteGears()
             Gui.Selection.removeObserver(self.sel_o)
             Gui.Control.closeDialog()
 
@@ -79,6 +59,28 @@ class SlaveGearTaskPanel:
 
     def getStandardButtons(self):
         return QDialogButtonBox.Cancel | QDialogButtonBox.Ok
+
+    def createInvoluteGears(self):
+        part_master, body_master, fp_master = self.sel_o.selection
+        for part in part_master.InList:
+            if part.Type == "Part_Gears":
+                part_gears = part
+        angle_list = self.form[0].lineEdit_2.text()
+        list_s_gear = "[" + angle_list + "]"
+        if list_s_gear:
+            for angle in eval(list_s_gear):
+                part_slave = App.activeDocument().addObject('App::Part','Part_Slave')
+                part_slave.Type = "Part_Slave"
+                part_gears.addObject(part_slave)
+                body_slave = App.activeDocument().addObject('PartDesign::Body', 'Body_slave')
+                part_slave.addObject(body_slave)
+                fp_slave = App.activeDocument().addObject("PartDesign::FeaturePython", "FP_slave")
+                body_slave.addObject(fp_slave)
+                ViewProviderSlaveGear(fp_slave.ViewObject)
+                SlaveGear(fp_slave, fp_master, angle)
+                App.activeDocument().recompute()
+
+        Gui.SendMsgToActiveView("ViewFit")
 
 
 class makeSlaveGearCmd():

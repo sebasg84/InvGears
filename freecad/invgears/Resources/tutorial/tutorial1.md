@@ -4,5 +4,4 @@
 
 This tutorial is available as a video:
 
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/lDkjM4Bx6BQ/0.jpg)](http://www.youtube.com/watch?v=lDkjM4Bx6BQ "Video Title")
-
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/CtPkHeXRJ5k/0.jpg)](https://youtu.be/CtPkHeXRJ5k "Video Title")

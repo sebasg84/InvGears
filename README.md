@@ -1,26 +1,29 @@
 # FreeCAD InvGears workbench
 
-Current version 0.1.1
+Current version 0.1.2
 
 ## Overview
 
 The InvGears workbench allows the creation of gear systems. The gear generation algorithm is based on [[1]](#1).
+
+Now with spherical involute bevel gear!!!
 
 Given a set of parameters corresponding to a pair of gears, the algorithm finds the geometry of both gears.
 
 It is also possible to create a body with two gears, allowing the creation of cascading gears.
 In addition, it is possible to create internal gears.
 
-A very important parameter that was added is an offset for 3D printers. The offset of the gears is calculated analytically, since the derivatives of the geometric equations were obtained to achieve this goal.
+The offsets of the gears on the plane are calculated analytically, since the derivatives of the geometric equations were obtained to achieve this goal.
 
 On the other hand, it is possible to create gears in an SVG file independently. If you want to create gears in SVG from those already created, this last tool allows you to load the parameters of these gears and then create the SVG file.
 
-InvGears makes use of PartDesign to create bodies in which the gears are located. This allows the gears to be modified using PartDesign.
+InvGears makes use of PartDesign to create bodies in which the gears are located. This allows the gears to be modified using PartDesign. It also uses parts that allow you to easily link other parts with the gears.
 
-![](freecad/invgears/Resources/media/mainImage.png)
+Two control parameters are added to the master part that allows to animate the gears easily, making use for example of animator macro (https://github.com/mwganson/animator). This macro was added within the workbench, but only show the gears control variables.
 
-A small example of how to use the workbench is presented in the following video
-https://youtu.be/lxtZ2gQRi88
+
+![](freecad/invgears/Resources/media/sphericalGears.gif)
+
 
 ## Installation
 
@@ -56,9 +59,17 @@ Copy InvGears folder into /Users/username/Library/Preferences/FreeCAD/Mod/ where
 
 ## Getting Started
 
-[Tutorial #1](freecad/invgears/Resources/tutorial/tutorial1.md)
+[Tutorial #1](Resources/tutorial/tutorial1.md)
+
+[Tutorial #2](Resources/tutorial/tutorial2.md)
 
 ## Release notes
+- 2021.12.04 (0.1.2)
+    Spherical involute bevel gear were added
+
+    The use of Part is incorporated for a better workflow, which allows to obtain links with other parts and animations easily
+
+    Task panels were improved
 
 - 2021.10.31 (0.1.1)
 
@@ -70,6 +81,10 @@ Copy InvGears folder into /Users/username/Library/Preferences/FreeCAD/Mod/ where
 <a id="1">[1]</a> 
 Colbourne, John R. The geometry of involute gears. Springer Science & Business Media, 2012.
 
+## Acknowledgments
+
+I want to thank the Telegram group ["FreeCAD en español"](https://t.me/FreeCAD_Es), and give a special thanks to Maxi, Juan Manuel y Pepe for their suggestions and corrections
+
 ******************************************************************************************************************
 
 # FreeCAD Entorno de trabajo InvGears
@@ -78,19 +93,20 @@ Colbourne, John R. The geometry of involute gears. Springer Science & Business M
 
 El entorno de trabajo InvGears permite la creación de sistemas de engranajes. El algoritmo de generación de engranajes se basa en [[1]](#1).
 
+Ahora con engranajes esféricos involutivos!!!
+
 Dado un conjunto de parámetros correspondientes a un par de engranajes, el algoritmo encuentra la geometría de ambos engranajes.
 
 También es posible crear un cuerpo con dos engranajes, lo que permite la creación de engranajes en cascada. Además, es posible crear engranajes internos.
 
-Un parámetro muy importante que se agregó es un offset para impresoras 3D. El offset de los engranajes se calcula analíticamente, ya que se obtuvieron las derivadas de las ecuaciones geométricas para lograr este objetivo.
+Los offset de los engranajes sobre el plano se calculan analíticamente, ya que se obtuvieron las derivadas de las ecuaciones geométricas para lograr este objetivo.
 
 Por otro lado, es posible crear engranajes en un archivo SVG de forma independiente. Si desea crear engranajes en SVG a partir de los ya creados, esta última herramienta le permite cargar los parámetros de estos engranajes y luego crear el archivo SVG.
 
 InvGears hace uso de PartDesign para crear cuerpos en los que se ubican los engranajes. Esto permite modificar los engranajes utilizando PartDesign.
 
-![](freecad/invgears/Resources/media/mainImage.png)
+![](freecad/invgears/Resources/media/sphericalGears.gif)
 
-Un pequeño ejemplo de cómo usar el banco de trabajo se presenta en el siguiente video https://youtu.be/lxtZ2gQRi88
 
 ## Instalación
 
@@ -126,9 +142,18 @@ Copie la carpeta InvGears en /Users/username/Library/Preferences/FreeCAD/Mod/ do
 
 ## Empezando
 
-[Tutorial #1](freecad/invgears/Resources/tutorial/tutorial1.md)
+[Tutorial #1](Resources/tutorial/tutorial1.md)
+
+[Tutorial #2](Resources/tutorial/tutorial2.md)
 
 ## Notas de lanzamiento
+
+- 2021.12.04 (0.1.2)
+    Se añadieron engranajes esféricos involutivos
+
+    Se incorpora el uso de Part para un mejor flujo de trabajo, que permite obtener enlaces con otras partes y animaciones facilmente.
+
+    Los paneles de tareas fueron mejorados
 
 - 2021.10.31 (0.1.1)
 
@@ -139,3 +164,8 @@ Copie la carpeta InvGears en /Users/username/Library/Preferences/FreeCAD/Mod/ do
 ## Referencias
 <a id="1">[1]</a> 
 Colbourne, John R. The geometry of involute gears. Springer Science & Business Media, 2012.
+
+
+## Agradecimientos
+
+Quiero agradecer al grupo de Telegram ["FreeCAD en español"](https://t.me/FreeCAD_Es), y dar un especial agradecimientoa  Maxi, Juan Manuel y Pepe por sus sugerencias y correcciones.

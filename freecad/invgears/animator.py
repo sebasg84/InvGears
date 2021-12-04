@@ -41,7 +41,7 @@ class Animator:
             return [prop+".x",prop+".y",prop+".z"]
         elif "Matrix" in typeId:
             return [prop+".A11",prop+".A12",prop+".A13",prop+".A14",prop+".A21",prop+".A22",prop+".A23",prop+".A24",prop+".A31",prop+".A32",prop+".A33",prop+".A34",
-prop+".A41",prop+".A42",prop+".A43",prop+".A44"]
+                    prop+".A41",prop+".A42",prop+".A43",prop+".A44"]
         elif "ConstraintList" in typeId:
             conlist = getattr(obj,prop)
             names = [prop + "." + con.Name for con in conlist if con.Name]
@@ -185,12 +185,15 @@ prop+".A41",prop+".A42",prop+".A43",prop+".A44"]
         objects = [obj for obj in doc.Objects if obj != fp and not obj.TypeId in fp.BlacklistedObjects]
         self.properties = []
         for obj in objects:
-            props = self.getProperties(fp,obj)
-            if props:
-                for prop in props:
-                    subprops = self.getSubProperties(prop,obj.getTypeIdOfProperty(prop),obj)
-                    for sub in subprops:
-                        self.properties.extend([obj.Name+"."+sub])
+            if obj.TypeId == 'App::Part':
+                props = self.getProperties(fp,obj)
+                if props:
+                    for prop in props:
+                        # subprops = self.getSubProperties(prop,obj.getTypeIdOfProperty(prop),obj)
+                        # for sub in subprops:
+                        #     self.properties.extend([obj.Name+"."+sub])
+                        if prop == "masterRotation" or prop == "slaveAngularPosition":
+                            self.properties.extend([obj.Name+"."+prop])
         self.properties.sort()
         self.properties = ["Select Property"] + self.properties
 

@@ -25,33 +25,42 @@ import FreeCADGui as Gui
 
 
 class SelObserver:
-    def __init__(self, button, lineEdit, print_warnings):
+    def __init__(self, button, lineEdit, print_warnings, bevel=False):
         self.button = button
         self.lineEdit = lineEdit
         self.print_warnings = print_warnings
         self.sel_flag = False
+        self.bevel = bevel
 
     def addSelection(self, doc, obj, sub, pnt):
         selection = Gui.Selection.getSelection()
 
         if (len(selection) >= 1):
             if (len(selection) > 1):
-                self.print_warnings.setText("Selection error: You must choose only one object")
-                self.button.setText("Press to Select a master gear")
+                self.print_warnings.setText("Selection error: You must choose only one part")
+                self.button.setText("Select a Part")
             else:
-                if selection[0].TypeId == 'PartDesign::FeaturePython':
-                    if selection[0].Proxy.Type == "masterGear" or selection[0].Proxy.Type == "slaveMasterGear" or selection[0].Proxy.Type == "internalGear":
-                        self.print_warnings.setText("Selection successfully completed")
-                        self.button.setText("Master gear selected")
-                        self.lineEdit.setText(selection[0].Name)
-                        self.selection = selection[0]
-                        self.sel_flag = True
-                    else:
-                        self.print_warnings.setText("Selection error: You must choose a master gear")
-                        self.button.setText("Press to Select a master gear")
-                else:
-                    self.print_warnings.setText("Selection error: You must choose a master gear")
-                    self.button.setText("Press to Select a master gear")
+                part = selection[0]
+                if part.TypeId == 'App::Part':
+                    bodies = part.Group
+                    for body in bodies:
+                        if body.TypeId == 'PartDesign::Body':
+                            fps = body.Group
+                            for fp in fps:
+                                if fp.TypeId == 'PartDesign::FeaturePython':
+                                    if (((fp.Proxy.Type == "masterGear" or fp.Proxy.Type == "slaveMasterGear" or fp.Proxy.Type == "internalGear") and not self.bevel)
+                                        or (fp.Proxy.Type == "masterBevelGear" and self.bevel)):
+                                        self.print_warnings.setText("Selection successfully completed")
+                                        self.button.setText("Part selected")
+                                        self.lineEdit.setText(fp.Name)
+                                        self.selection = [part, body, fp]
+                                        self.sel_flag = True
+                                    else:
+                                        self.print_warnings.setText("Selection error: Choose a part that contains a master gear")
+                                        self.button.setText("Select a Part")
+                                else:
+                                    self.print_warnings.setText("Selection error: Choose a part that contains a master gear")
+                                    self.button.setText("Select a Part")
 
             self.button.setEnabled(True)
             Gui.Selection.removeObserver(self)

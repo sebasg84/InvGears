@@ -1,0 +1,17 @@
+<RCC>
+    <qresource>
+        <file>icons/Animator.svg</file>
+        <file>icons/internal_gear.svg</file>
+        <file>icons/master_bevel_gear.svg</file>
+        <file>icons/master_gear.svg</file>
+        <file>icons/slave_bevel_gear.svg</file>
+        <file>icons/slave_gear.svg</file>
+        <file>icons/slave-master_gear.svg</file>
+        <file>icons/SVG_gears.svg</file>
+        <file>ui/additional.ui</file>
+        <file>ui/gears.ui</file>
+        <file>ui/loadParameters.ui</file>
+        <file>ui/separator.ui</file>
+        <file>ui/slaves.ui</file>
+    </qresource>
+</RCC>

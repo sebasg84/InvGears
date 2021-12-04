@@ -1,7 +1,7 @@
 # ***************************************************************************
 # *   Copyright (c) 2021 Sebastian Ernesto García <sebasg@outlook.com>      *
 # *                                                                         *
-# *   newMasterCmd.py                                                       *
+# *   newAnimatorCmd.py                                                     *
 # *                                                                         *
 # *   This program is free software; you can redistribute it and/or modify  *
 # *   it under the terms of the GNU Lesser General Public License (LGPL)    *
@@ -26,15 +26,13 @@ import FreeCADGui as Gui
 
 from PySide2.QtWidgets import QDialogButtonBox
 
-from freecad.invgears import local
 from freecad.invgears.animator import Animator, AnimatorVP
-from freecad.invgears.widgets import GearWidget
 
 
 class makeAnimatorCmd():
     def GetResources(self):
         return {"MenuText": "Create an Animator",
-                "ToolTip": "Create a new animator",
+                "ToolTip": "Create an animator for gears (For all the properties available in Animator go to (https://github.com/mwganson/animator))",
                 "Pixmap": "Animator"}
 
     def IsActive(self):

@@ -26,82 +26,93 @@ import FreeCADGui as Gui
 
 from PySide2.QtWidgets import QDialogButtonBox, QFileDialog
 
-from freecad.invgears import local
 from freecad.invgears.svgFile import GearsInSVG
-from freecad.invgears.widgets import GearWidget
 from freecad.invgears.observers import SelObserver
-
-
-class createInvoluteGears5():
-    def __init__(self, widget, filename):
-        GearsInSVG(widget, filename)
-        Gui.SendMsgToActiveView("ViewFit")
 
 
 class GearsInSVGTaskPanel:
     def __init__(self):
-        self.form = GearWidget("SVG", self.attach_master_gear, self.load_paramers)
-        print(type(self))
-        self.master_gear_Button = self.form.master_gear_Button
-        self.master_gear_Edit = self.form.master_gear_Edit
-        self.print_warnings = self.form.print_warnings
-        self.sel_o = SelObserver(self.master_gear_Button, self.master_gear_Edit, self.print_warnings)
+        widget1 = Gui.PySideUic.loadUi(":/ui/loadParameters.ui")
+        widget2 = Gui.PySideUic.loadUi(":/ui/gears.ui")
+        widget3 = Gui.PySideUic.loadUi(":/ui/additional.ui")
+        self.form = [widget1, widget2, widget3]
+        self.form[0].pushButton.clicked.connect(self.attach_master_gear)
+        self.form[0].pushButton_2.clicked.connect(self.load_paramers)
+        self.form[1].checkBox.stateChanged.connect(self.onStatusChanged)
+        self.form[1].doubleSpinBox_7.setEnabled(False)
+        self.form[1].label_9.hide()
+        self.form[1].doubleSpinBox_6.hide()
+        self.form[1].label_10.hide()
+        self.form[1].lineEdit.hide()
+        
+        self.sel_o = SelObserver(self.form[0].pushButton, self.form[0].lineEdit, self.form[0].label)
 
-        self.master_gear_Button.setText("Press to Select a master gear")
+        self.form[0].pushButton.setText("Press to Select a master gear")
 
     def attach_master_gear(self):
-        self.master_gear_Button.setText("Selecting master gear...")
-        self.master_gear_Button.setEnabled(False)
+        self.form[0].pushButton.setText("Selecting fp_master...")
+        self.form[0].pushButton.setEnabled(False)
         self.sel_o.addSelection(0, 0, 0, 0)
 
     def load_paramers(self):
-        print("load Parametrs")
-        fp_master = self.sel_o.selection
-        widget = self.form
-        widget.mEdit.setText(str(round(fp_master.m.Value, 4)))
-        widget.phi_sEdit.setText(str(round(fp_master.phi_s.Value, 4)))
-        widget.N_m_Edit.setText(str(fp_master.m_N))
-        widget.N_s_Edit.setText(str(fp_master.s_N))
-        widget.cEdit.setText(str(round(fp_master.c, 4)))
-        widget.rfEdit.setText(str(round(fp_master.rk, 4)))
-        widget.deltaCEdit.setText(str(round(fp_master.deltaCs.Value, 4)))
-        widget.deltaTpEdit.setText(str(round(fp_master.deltatp.Value, 4)))
-        widget.BnEdit.setText(str(round(fp_master.Bn.Value, 4)))
-        widget.interfEdit.setText(str(round(fp_master.iL, 4)))
-        widget.numPointsEdit.setText(str(round(fp_master.n, 4)))
-        widget.offset_m_Edit.setText(str(round(fp_master.m_offset.Value, 4)))
-        widget.offset_s_Edit.setText(str(round(fp_master.s_offset.Value, 4)))
+        part_master, body_master, fp_master = self.sel_o.selection
+        self.form[1].doubleSpinBox.setValue(fp_master.m.Value)
+        self.form[1].doubleSpinBox_2.setValue(fp_master.phi_s.Value)
+        self.form[1].spinBox.setValue(fp_master.N_m)
+        self.form[1].spinBox_2.setValue(fp_master.N_s)
+        self.form[1].doubleSpinBox_3.setValue(fp_master.Bl.Value)
         if fp_master.Proxy.Type == 'internalGear':
-            widget.checkBox.setChecked(True)
-            widget.thicknessEdit.setText(str(round(fp_master.thickness.Value, 4)))
+            self.form[1].checkBox.setChecked(True)
+            self.form[1].doubleSpinBox_7.setValue(fp_master.extThickness.Value)
         else:
-            widget.checkBox.setChecked(False)
+            self.form[1].checkBox.setChecked(False)
+
+        self.form[2].doubleSpinBox.setValue(fp_master.c)
+        self.form[2].doubleSpinBox_2.setValue(fp_master.deltaCs.Value)
+        self.form[2].doubleSpinBox_3.setValue(fp_master.deltatp.Value)
+        self.form[2].doubleSpinBox_4.setValue(fp_master.offset_m.Value)
+        self.form[2].doubleSpinBox_5.setValue(fp_master.offset_s.Value)
+        self.form[2].spinBox.setValue(fp_master.n)
+        self.form[2].doubleSpinBox_6.setValue(fp_master.iL)
 
     def accept(self):
-        if self.form.checkBox.isChecked():
-            N_m = self.form.N_m_Edit.text()
-            N_s = self.form.N_s_Edit.text()
+        if self.form[1].checkBox.isChecked():
+            N_m = self.form[1].spinBox.value()
+            N_s = self.form[1].spinBox_2.value()
             if N_s >= N_m:
-                self.form.print_warnings.setText("Number of master gear teeth must be greater than Number of slave gear teeth")
+                self.form[1].label_12.setText("Number of master gear teeth must be greater than Number of slave gear teeth")
             else:
-                filename, filter = QFileDialog.getSaveFileName(self.form, "Save Gears in SVG file", ".", "SVG files (*.svg)")
-                if filename:
-                    createInvoluteGears5(self.form, filename)
+                self.filename, filter = QFileDialog.getSaveFileName(self.form[1], "Save Gears in SVG file", ".", "SVG files (*.svg)")
+                if self.filename:
+                    self.createInvoluteGears()
                     Gui.Selection.removeObserver(self.sel_o)
                     Gui.Control.closeDialog()
         else:
-            filename, filter = QFileDialog.getSaveFileName(self.form, "Save Gears in SVG file", ".", "SVG files (*.svg)")
-            if filename:
-                createInvoluteGears5(self.form, filename)
+            self.filename, filter = QFileDialog.getSaveFileName(self.form[1], "Save Gears in SVG file", ".", "SVG files (*.svg)")
+            if self.filename:
+                self.createInvoluteGears()
                 Gui.Selection.removeObserver(self.sel_o)
                 Gui.Control.closeDialog()
 
     def reject(self):
         Gui.Selection.removeObserver(self.sel_o)
         Gui.Control.closeDialog()
+    
+    def open(self):
+        self.form[2].parent().hide()
 
     def getStandardButtons(self):
         return QDialogButtonBox.Cancel | QDialogButtonBox.Ok
+
+    def onStatusChanged(self, state):
+        if state == 0:
+            self.form[1].doubleSpinBox_7.setEnabled(False)
+        else:
+            self.form[1].doubleSpinBox_7.setEnabled(True)
+
+    def createInvoluteGears(self):
+        GearsInSVG(self.form, self.filename)
+        Gui.SendMsgToActiveView("ViewFit")
 
 
 class makeGearsInSVGCmd():
