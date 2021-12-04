@@ -6,7 +6,7 @@ Current version 0.1.2
 
 The InvGears workbench allows the creation of gear systems. The gear generation algorithm is based on [[1]](#1).
 
-Now with spherical involute bevel gear!!!
+Now with spherical involute gear!!!
 
 Given a set of parameters corresponding to a pair of gears, the algorithm finds the geometry of both gears.
 
@@ -65,7 +65,7 @@ Copy InvGears folder into /Users/username/Library/Preferences/FreeCAD/Mod/ where
 
 ## Release notes
 - 2021.12.04 (0.1.2)
-    Spherical involute bevel gear were added
+    Spherical involute gear were added
 
     The use of Part is incorporated for a better workflow, which allows to obtain links with other parts and animations easily
 
