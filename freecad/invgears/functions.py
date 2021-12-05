@@ -43,7 +43,7 @@ def helicalextrusion(wire, height, angle, vPos=App.Vector(0, 0, 0), orientation=
     return first_solid
 
 
-def doblehelicalextrusion(wire, height, angle, vPos=App.Vector(0, 0, 0), orientation=0):
+def doublehelicalextrusion(wire, height, angle, vPos=App.Vector(0, 0, 0), orientation=0):
     direction = bool(angle < 0)
     first_spine = makeHelix((height / 2) * (2 * pi / abs(angle)), height / 2, height, 0, direction)
     first_spine.Placement = App.Placement(vPos, App.Rotation(App.Vector(0, 0, 1), 0))
@@ -63,9 +63,9 @@ def getMasterShape(fp, W, z=0.0, tita=0.0):
     if fp.gearType == "Helical":
         helicalAngle = fp.helicalPortion * (2 * pi / fp.N_m)
         Solid = helicalextrusion(W, thickness, helicalAngle, App.Vector(0, 0, z), tita)
-    if fp.gearType == "Doble Helical":
+    if fp.gearType == "Double Helical":
         helicalAngle = fp.helicalPortion * (2 * pi / fp.N_m)
-        Solid = doblehelicalextrusion(W, thickness, helicalAngle, App.Vector(0, 0, z), tita)
+        Solid = doublehelicalextrusion(W, thickness, helicalAngle, App.Vector(0, 0, z), tita)
     return Solid
 
 
@@ -77,9 +77,9 @@ def getSlaveShape(fp_master):
     if fp_master.gearType == "Helical":
         helicalAngle = -fp_master.helicalPortion * (2 * pi / fp_master.N_s)
         Solid = helicalextrusion(W, thickness, helicalAngle)
-    if fp_master.gearType == "Doble Helical":
+    if fp_master.gearType == "Double Helical":
         helicalAngle = -fp_master.helicalPortion * (2 * pi / fp_master.N_s)
-        Solid = doblehelicalextrusion(W, thickness, helicalAngle)
+        Solid = doublehelicalextrusion(W, thickness, helicalAngle)
     return Solid
 
 
@@ -90,9 +90,9 @@ def getInternalShape(fp, W, z=0.0, tita=0.0):
     if fp.gearType == "Helical":
         helicalAngle = - fp.helicalPortion * (2 * pi / fp.N_m)
         Solid = helicalextrusion(W, thickness, helicalAngle, App.Vector(0, 0, z), tita)
-    if fp.gearType == "Doble Helical":
+    if fp.gearType == "Double Helical":
         helicalAngle = - fp.helicalPortion * (2 * pi / fp.N_m)
-        Solid = doblehelicalextrusion(W, thickness, helicalAngle, App.Vector(0, 0, z), tita)
+        Solid = doublehelicalextrusion(W, thickness, helicalAngle, App.Vector(0, 0, z), tita)
     return Solid
 
 

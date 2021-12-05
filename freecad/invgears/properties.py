@@ -104,22 +104,22 @@ def addMasterProperties(fp, widget1, widget2, bevel=False):
         fp.addProperty('App::PropertyInteger', 'N_s', '1 - Gears Parameters', 'Number of slave gear teeth').N_s = widget1.spinBox_2.value()
         fp.addProperty('App::PropertyLength', 'Bl', '1 - Gears Parameters', 'Backlash along the line of action').Bl = widget1.doubleSpinBox_3.text()
         if bevel is False:
-            fp.addProperty('App::PropertyEnumeration', 'gearType', '1 - Gears Parameters', 'Gear type').gearType = ["Spur", "Helical", "Doble Helical"]
+            fp.addProperty('App::PropertyEnumeration', 'gearType', '1 - Gears Parameters', 'Gear type').gearType = ["Spur", "Helical", "Double Helical"]
             fp.gearType = widget1.comboBox.currentText()
             fp.addProperty('App::PropertyFloat', 'helicalPortion', '1 - Gears Parameters', 'Helical portion').helicalPortion = widget1.doubleSpinBox_4.value()
         fp.addProperty('App::PropertyLength', 'thickness', '1 - Gears Parameters', 'Gear thickness').thickness = widget1.doubleSpinBox_5.text()
         if bevel is True:
             fp.addProperty('App::PropertyAngle', 'Sigma', '1 - Gears Parameters', 'Angle between gear axes').Sigma = widget1.doubleSpinBox_6.text()
 
-        fp.addProperty('App::PropertyFloat', 'c', '2 - Aditional Parameters', 'Clearance / module').c = widget2.doubleSpinBox.value()
+        fp.addProperty('App::PropertyFloat', 'c', '2 - Additional Parameters', 'Clearance / module').c = widget2.doubleSpinBox.value()
         if bevel is False:
-            fp.addProperty('App::PropertyDistance', 'deltaCs', '2 - Aditional Parameters', 'Center distance offset').deltaCs = widget2.doubleSpinBox_2.text()
-        fp.addProperty('App::PropertyDistance', 'deltatp', '2 - Aditional Parameters', 'Tooth thickness offset').deltatp = widget2.doubleSpinBox_3.text()
+            fp.addProperty('App::PropertyDistance', 'deltaCs', '2 - Additional Parameters', 'Center distance offset').deltaCs = widget2.doubleSpinBox_2.text()
+        fp.addProperty('App::PropertyDistance', 'deltatp', '2 - Additional Parameters', 'Tooth thickness offset').deltatp = widget2.doubleSpinBox_3.text()
         if bevel is False:
-            fp.addProperty('App::PropertyDistance', 'offset_m', '2 - Aditional Parameters', 'Offset for master gear').offset_m = widget2.doubleSpinBox_4.text()
-            fp.addProperty('App::PropertyDistance', 'offset_s', '2 - Aditional Parameters', 'Offset for slave gear').offset_s = widget2.doubleSpinBox_5.text()
-        fp.addProperty('App::PropertyInteger', 'n', '2 - Aditional Parameters', 'Number of points on the curves').n = widget2.spinBox.value()
-        fp.addProperty('App::PropertyFloat', 'iL', '2 - Aditional Parameters', 'Limit of second Interference').iL = widget2.doubleSpinBox_6.value()
+            fp.addProperty('App::PropertyDistance', 'offset_m', '2 - Additional Parameters', 'Offset for master gear').offset_m = widget2.doubleSpinBox_4.text()
+            fp.addProperty('App::PropertyDistance', 'offset_s', '2 - Additional Parameters', 'Offset for slave gear').offset_s = widget2.doubleSpinBox_5.text()
+        fp.addProperty('App::PropertyInteger', 'n', '2 - Additional Parameters', 'Number of points on the curves').n = widget2.spinBox.value()
+        fp.addProperty('App::PropertyFloat', 'iL', '2 - Additional Parameters', 'Limit of second Interference').iL = widget2.doubleSpinBox_6.value()
         
         if bevel is True:
             fp.addProperty('App::PropertyLength', 'lambda_', '3 - Common data', 'Spherical radius', 1)
