@@ -1,6 +1,4 @@
-# FreeCAD InvGears workbench
-
-Current version 0.1.2
+## FreeCAD InvGears Workbench v0.1.2
 
 ## Overview
 
@@ -19,7 +17,7 @@ On the other hand, it is possible to create gears in an SVG file independently. 
 
 InvGears makes use of PartDesign to create bodies in which the gears are located. This allows the gears to be modified using PartDesign. It also uses parts that allow you to easily link other parts with the gears.
 
-Two control parameters are added to the master part that allows to animate the gears easily, making use for example of animator macro (https://github.com/mwganson/animator). This macro was added within the workbench, but only show the gears control variables.
+Two control parameters are added to the master part that allows to animate the gears easily, making use for example of animator macro (https://github.com/mwganson/animator). This macro was added within the workbench, but to only show the gears control variables.
 
 
 ![](freecad/invgears/Resources/media/sphericalGears.gif)
@@ -27,35 +25,44 @@ Two control parameters are added to the master part that allows to animate the g
 
 ## Installation
 
-### **GNU/Linux**
+### GNU/Linux
+<details>
+  <summary>Expand for details</summary>
 
-**Installing for all users**
+#### Installing for all users
 
-Copy InvGears folder into /usr/share/freecad/Mod/
+Copy InvGears folder into `/usr/share/freecad/Mod/`
 
-**Installing for a single user**
+#### Installing for a single user
 
-Copy InvGears folder into /home/username/.FreeCAD/Mod/  where username is your user name
+Copy InvGears folder into `/home/username/.FreeCAD/Mod/`  where username is your user name
+</details>
 
-### **Windows**
+### Windows
+<details>
+  <summary>Expand for details</summary>
 
-**Installing for all users**
+#### Installing for all users
 
-Copy InvGears folder into C:\Program Files\FreeCAD\Mod\
+Copy InvGears/ folder into `C:\Program Files\FreeCAD\Mod\`
 
-**Installing for a single user**
+#### Installing for a single user
 
-Copy InvGears folder into C:\Users\username\Appdata\Roaming\FreeCAD\Mod\ where username is your user name
+Copy InvGears folder into `C:\Users\username\Appdata\Roaming\FreeCAD\Mod\` where username is your user name
+</details>
 
-### **macOs**
+### macOS
+<details>
+  <summary>Expand for details</summary>
 
-### Installing for all users
+#### Installing for all users
 
-Copy InvGears folder into /Applications/FreeCAD/Mod/
+Copy InvGears folder into `/Applications/FreeCAD/Mod/`
 
-### Installing for a single user
+#### Installing for a single user
 
-Copy InvGears folder into /Users/username/Library/Preferences/FreeCAD/Mod/ where username is your user name
+Copy InvGears folder into `/Users/username/Library/Preferences/FreeCAD/Mod/` where username is your user name
+</details>
 
 ## Getting Started
 
@@ -64,6 +71,7 @@ Copy InvGears folder into /Users/username/Library/Preferences/FreeCAD/Mod/ where
 [Tutorial #2](freecad/invgears/Resources/tutorial/tutorial2.md)
 
 ## Release notes
+
 - 2021.12.04 (0.1.2)
     Spherical involute gear were added
 
@@ -78,16 +86,16 @@ Copy InvGears folder into /Users/username/Library/Preferences/FreeCAD/Mod/ where
     Animator information is found at: https://github.com/mwganson/animator
 
 ## References
-<a id="1">[1]</a> 
-Colbourne, John R. The geometry of involute gears. Springer Science & Business Media, 2012.
+
+<a id="1">[1]</a> Colbourne, John R. The geometry of involute gears. Springer Science & Business Media, 2012.
 
 ## Acknowledgments
 
-I want to thank the Telegram group ["FreeCAD en español"](https://t.me/FreeCAD_Es), and give a special thanks to Maxi, Juan Manuel and Pepe for their suggestions and corrections
+I want to thank the Telegram group ["FreeCAD en español"](https://t.me/FreeCAD_Es), and give a special thanks to Maxi, Juan Manuel, and Pepe for their suggestions and corrections
 
-******************************************************************************************************************
+---------------------------------------------------------
 
-# FreeCAD Entorno de trabajo InvGears
+## FreeCAD Entorno de trabajo InvGears
 
 ## Visión general
 
@@ -110,41 +118,40 @@ InvGears hace uso de PartDesign para crear cuerpos en los que se ubican los engr
 
 ## Instalación
 
-### **GNU/Linux**
+### GNU/Linux
 
-**Instalación para todos los usuarios**
+#### Instalación para todos los usuarios
 
-Copie la carpeta InvGears en /usr/share/freecad/Mod/
+Copie la carpeta InvGears en `/usr/share/freecad/Mod/`
 
-**Instalación para un solo usuario**
+#### Instalación para un solo usuario
 
-Copie la carpeta InvGears en /home/username/.FreeCAD/Mod/ donde username es su nombre de usuario
+Copie la carpeta InvGears en `/home/username/.FreeCAD/Mod/` donde username es su nombre de usuario
 
-### **Windows**
+### Windows
 
-**Instalación para todos los usuarios**
+#### Instalación para todos los usuarios
 
-Copie la carpeta InvGears en C:\Archivos de programa\FreeCAD\Mod\
+Copie la carpeta InvGears en `C:\Archivos de programa\FreeCAD\Mod\`
 
-**Instalación para un solo usuario**
+#### Instalación para un solo usuario
 
-Copie la carpeta InvGears en C:\Users\username\Appdata\Roaming\FreeCAD\Mod\ donde username es su nombre de usuario
+Copie la carpeta InvGears en `C:\Users\username\Appdata\Roaming\FreeCAD\Mod\` donde username es su nombre de usuario
 
-### **Mac OS**
+### macOS
 
-**Instalación para todos los usuarios**
+#### Instalación para todos los usuarios
 
-Copie la carpeta InvGears en /Aplicaciones/FreeCAD/Mod/
+Copie la carpeta InvGears en `/Aplicaciones/FreeCAD/Mod/`
 
-**Instalación para un solo usuario**
+#### Instalación para un solo usuario
 
-Copie la carpeta InvGears en /Users/username/Library/Preferences/FreeCAD/Mod/ donde username es su nombre de usuario
+Copie la carpeta InvGears en `/Users/username/Library/Preferences/FreeCAD/Mod/` donde username es su nombre de usuario
 
 ## Empezando
 
-[Tutorial #1](freecad/invgears/Resources/tutorial/tutorial1.md)
-
-[Tutorial #2](freecad/invgears/Resources/tutorial/tutorial2.md)
+* [Tutorial #1](freecad/invgears/Resources/tutorial/tutorial1.md)
+* [Tutorial #2](freecad/invgears/Resources/tutorial/tutorial2.md)
 
 ## Notas de lanzamiento
 
@@ -162,8 +169,8 @@ Copie la carpeta InvGears en /Users/username/Library/Preferences/FreeCAD/Mod/ do
     La información de Animator se encuentra en: https://github.com/mwganson/animator
 
 ## Referencias
-<a id="1">[1]</a> 
-Colbourne, John R. The geometry of involute gears. Springer Science & Business Media, 2012.
+
+<a id="1">[1]</a> Colbourne, John R. The geometry of involute gears. Springer Science & Business Media, 2012.
 
 
 ## Agradecimientos
