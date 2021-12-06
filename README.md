@@ -6,7 +6,7 @@ The InvGears workbench allows the creation of gear systems. The gear generation 
 
 Now with spherical involute gear!!!
 
-Starting from the equations in the book [[1]](#1), I obtained all the equations the involute and fillet curves for the spherical gears.
+Starting from the equations in the book [[1]](#1), I obtained all the equations of the involute and fillet curves for the spherical gears.
 
 Given a set of parameters corresponding to a pair of gears, the algorithm finds the geometry of both gears.
 
