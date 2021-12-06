@@ -2,9 +2,11 @@
 
 ## Overview
 
-The InvGears workbench allows the creation of gear systems. The gear generation algorithm is based on [[1]](#1).
+The InvGears workbench allows the creation of gear systems. The gear generation algorithm is based on [[1]](#1), which generates the involute and fillet curves. 
 
 Now with spherical involute gear!!!
+
+Starting from the equations in the book [[1]](#1), and using spherical trigonometry, I obtained all the equations to obtain the involute and fillet curves for the spherical gears.
 
 Given a set of parameters corresponding to a pair of gears, the algorithm finds the geometry of both gears.
 
@@ -99,9 +101,15 @@ I want to thank the Telegram group ["FreeCAD en español"](https://t.me/FreeCAD_
 
 ## Visión general
 
-El entorno de trabajo InvGears permite la creación de sistemas de engranajes. El algoritmo de generación de engranajes se basa en [[1]](#1).
+El entorno de trabajo InvGears permite la creación de sistemas de engranajes. El algoritmo de generación de engranajes se basa en [[1]](#1), el cual genera las curvas involutas y de fileteo.
 
 Ahora con engranajes esféricos involutivos!!!
+
+The InvGears workbench allows the creation of gear systems. The gear generation algorithm is based on [[1]](#1). In which the involute and fillet curves are generated.
+
+Now with spherical involute gear!!!
+
+Arrancando de las ecuaciones del libro [[1]](#1), y usando trigonometría esférica, obtuve todas las ecuaciones para obtener las curvas involutas y de fileteo de los engranajes esféricos.
 
 Dado un conjunto de parámetros correspondientes a un par de engranajes, el algoritmo encuentra la geometría de ambos engranajes.
 
