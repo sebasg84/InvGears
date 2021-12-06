@@ -119,6 +119,8 @@ InvGears hace uso de PartDesign para crear cuerpos en los que se ubican los engr
 ## Instalación
 
 ### GNU/Linux
+<details>
+  <summary>Expandir para detalles</summary>
 
 #### Instalación para todos los usuarios
 
@@ -127,9 +129,12 @@ Copie la carpeta InvGears en `/usr/share/freecad/Mod/`
 #### Instalación para un solo usuario
 
 Copie la carpeta InvGears en `/home/username/.FreeCAD/Mod/` donde username es su nombre de usuario
+</details>
 
 ### Windows
-
+<details>
+  <summary>Expandir para detalles</summary>
+  
 #### Instalación para todos los usuarios
 
 Copie la carpeta InvGears en `C:\Archivos de programa\FreeCAD\Mod\`
@@ -137,9 +142,12 @@ Copie la carpeta InvGears en `C:\Archivos de programa\FreeCAD\Mod\`
 #### Instalación para un solo usuario
 
 Copie la carpeta InvGears en `C:\Users\username\Appdata\Roaming\FreeCAD\Mod\` donde username es su nombre de usuario
+</details>
 
 ### macOS
-
+<details>
+  <summary>Expandir para detalles</summary>
+  
 #### Instalación para todos los usuarios
 
 Copie la carpeta InvGears en `/Aplicaciones/FreeCAD/Mod/`
@@ -147,6 +155,7 @@ Copie la carpeta InvGears en `/Aplicaciones/FreeCAD/Mod/`
 #### Instalación para un solo usuario
 
 Copie la carpeta InvGears en `/Users/username/Library/Preferences/FreeCAD/Mod/` donde username es su nombre de usuario
+</details>
 
 ## Empezando
 
