@@ -105,10 +105,6 @@ El entorno de trabajo InvGears permite la creación de sistemas de engranajes. E
 
 Ahora con engranajes esféricos involutivos!!!
 
-The InvGears workbench allows the creation of gear systems. The gear generation algorithm is based on [[1]](#1). In which the involute and fillet curves are generated.
-
-Now with spherical involute gear!!!
-
 Arrancando de las ecuaciones del libro [[1]](#1), obtuve todas las ecuaciones de las curvas involutas y de fileteo de los engranajes esféricos.
 
 Dado un conjunto de parámetros correspondientes a un par de engranajes, el algoritmo encuentra la geometría de ambos engranajes.
