@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
+  <name>InvGears workbench</name>
+  <description>Involute gears generator</description>
+  <version>0.1.2</version>
+  <maintainer email="sebasg@outlook.com">Sebastian E. Garcia</maintainer>
+  <license file="LICENSE">LGPL2+</license>
+  <url type="repository" branch="main">https://github.com/sebasg84/InvGears</url>
+  <icon>freecad/invgears/Resources/icons/master_gear.svg</icon>
+
+  <content>
+    <workbench>
+      <name>InvGears workbench</name>
+      <classname>InvGearsWorkbench</classname>
+      <description>Involute gears generator</description>
+      <version>0.1.2</version>
+      <subdirectory>./</subdirectory>
+      <icon>freecad/invgears/Resources/icons/master_gear.svg</icon>
+      <freecadmin>0.19.0</freecadmin>
+    </workbench>
+  </content>
+
+</package>
