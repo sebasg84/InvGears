@@ -244,7 +244,6 @@ class mainCalculations_b():
 
     def __get_load_commonData2(self, cD, gear1, gear2):
         cD.lambda_ = cD.m * sqrt(gear1.N**2 + gear2.N**2 + 2 * gear1.N * gear2.N * cos(cD.Sigma)) / (2 * sin(cD.Sigma)) #diameter from center where gear starts or ends
-        print("lambda_ ",cD.lambda_,"sigma = ",cD.Sigma)   
         cD.delta_c = (cD.c-(cD.addendum-1)) * cD.m / cD.lambda_
         cD.delta_addendum = (cD.addendum-1) * cD.m / cD.lambda_
         cD.B = cD.Bl * sqrt(1 + tan(cD.rho)**2)
@@ -266,7 +265,6 @@ class mainCalculations_b():
 
         gear1.RT = cD.lambda_ * sin(gear1.gamma_T)
         gear1.Rroot = cD.lambda_ * sin(gear1.gamma_root)
-        print("gamma_T ",gear1.gamma_T,"gamma_root =  ",gear1.gamma_root,"addendum = ",cD.delta_addendum)   
 
     def __get_load_gearData4(self, gear1, gear2, cD):
         gear1.tpc = cD.pp - gear2.tp

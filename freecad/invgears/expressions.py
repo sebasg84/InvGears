@@ -31,7 +31,6 @@ def slavePartExpressions(fp, fp_master):
     x = f"{part_master.Name}.Placement.Base.x"
     y = f"{part_master.Name}.Placement.Base.y"
     z = f"{part_master.Name}.Placement.Base.z"
-    print("Centerdistance = ",Center_distance_name, "value = ",fp_master.Center_d)
 
     N_m = f"{fp_master.Name}.N_m"
     N_s = f"{fp_master.Name}.N_s"
@@ -40,12 +39,10 @@ def slavePartExpressions(fp, fp_master):
     global_relation = relation
 
     if fp_master.Proxy.Type == "masterGear" or fp_master.Proxy.Type == "internalGear":
-        print("checkpoint 1")
         masterRotation = f"{part_master.Name}.masterRotation"
         slaveAngularPosition = f"{part_master.Name}.slaveAngularPosition"
-        print(slaveAngularPosition)
     elif fp_master.Proxy.Type == "slaveMasterGear":
-        print("checkpoint 2")
+
         masterRotation = f"{part_master.Name}.Placement.Rotation.Angle"
         master_beta = f"{fp_master.Name}.beta"
         part_Previusmaster = getPartFromFPMaster(fp_master.fp_master)
@@ -66,15 +63,11 @@ def slavePartExpressions(fp, fp_master):
             else:
                 break
         slaveAngularPosition = f"({part_master.Name}.slaveAngularPosition + {slaveAngularPositions} + {master_beta})"
-        print(slaveAngularPosition)
+
 
     beta = f"{fp.Name}.beta"
-    print("beta = ",beta,", value = ",fp.beta)
     xp = f"{x} + {Center_distance_name} * cos({beta} + {slaveAngularPosition})"
     yp = f"{y} + {Center_distance_name} * sin({beta} + {slaveAngularPosition})"
-
-    # xp = f"{x} + FP_master.C * cos({beta} + {slaveAngularPosition})"
-    # yp = f"{y} + FP_master.C * sin({beta} + {slaveAngularPosition})"
 
     if fp_master.Proxy.Type == "slaveMasterGear":
         hseparator = f"{fp_master.Name}.hseparator"
@@ -92,10 +85,6 @@ def slavePartExpressions(fp, fp_master):
     elif fp_master.Proxy.Type == "internalGear":
         angle = f"{beta} + {slaveAngularPosition} + (-{slaveAngularPosition} + {masterRotation}) * {relation}"
 
-    #print("xp = ",xp,"yp = ",yp,"zp = ",zp, "angle = ",angle,"angle type",type(angle))
-    print(f"create(<<placement>>; create(<<vector>>; {xp}; {yp}; {zp}); create(<<rotation>>; create(<<vector>>; 0; 0; 1); {angle}))")
-    # part_slave.setExpression("Placement", f"create(<<placement>>; create(<<vector>>; {xp}; {yp}; {zp}); create(<<rotation>>; create(<<vector>>; 0; 0; 1); 0))")
-
     part_slave.setExpression("Placement", f"create(<<placement>>; create(<<vector>>; {xp}; {yp}; {zp}); create(<<rotation>>; create(<<vector>>; 0; 0; 1); {angle}))")
     part_slave.setExpression("relation", relation)
     part_slave.setExpression("global_relation", global_relation)
@@ -110,7 +99,7 @@ def slaveBevelPartExpressions(fp, fp_master):
             part_master = part
     masterRotation = f"{part_master.Name}.masterRotation"
     slaveAngularPosition = f"{part_master.Name}.slaveAngularPosition"
-    print(slaveAngularPosition)
+
 
     N_m = f"{fp_master.Name}.N_m"
     N_s = f"{fp_master.Name}.N_s"
@@ -148,5 +137,4 @@ def slaveBevelPartExpressions(fp, fp_master):
     qrz = f"{part_slave.Name}.qrz"
     qrw = f"{part_slave.Name}.qrw"
 
-    print("xp = ",qrx,", yp = ",qry,", zp = ",qrz, ", angle = ",qrw,", angle type",type(qrw))
     part_slave.setExpression("Placement", f"create(<<placement>>; create(<<vector>>; 0; 0; 0); create(<<rotation>>; create(<<vector>>; {qrx} / sqrt(1- {qrz}^2); {qry} / sqrt(1- {qrz}^2); {qrz} / sqrt(1- {qrz}^2)); 2*atan(sqrt({qrz}^2+{qry}^2+{qrx}^2)/{qrw})))")
