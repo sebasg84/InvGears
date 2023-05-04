@@ -250,6 +250,31 @@ class getProfile():
 
         gear1.tita_Rroot = tita_R[-1]
 
+        """     
+        code from my own gear generator program, allows for a counter gear with rounded tip. future work.
+
+        if G.PrShft < 0 or Gcounter.PrShft < 0:
+            A = pi/Z1-G.backlash/4+Gcounter.PrShft*tan(G.t_alpha)/G.rp+G.PrShft*tan(G.t_alpha)/G.rp
+        else:
+            A = pi/Z1-G.backlash/4
+
+        x = -(x2*cos(A+phi*(Z1/Z2+1))+y2*sin(A+phi*(Z1/Z2+1))+E*sin(A+phi))
+        y = -x2* sin(A + phi*(Z1/Z2 + 1)) + y2*cos(A + phi*(Z1/Z2 + 1)) + E*cos(A + phi) 
+        
+        #calculate derivative
+        Tx = -((Z1 + Z2)*(y2*cos(A + Z1*phi/Z2 + phi) - x2* sin(A + Z1*phi/Z2 + phi)))/Z2 - E*cos(A + phi)
+        Ty =  (-Z1/Z2 - 1)* (x2* cos(A + (phi* (Z1 + Z2))/Z2) + y2* sin(A + (phi* (Z1 + Z2))/Z2)) - E*sin(A + phi)
+        
+        Nx = Ty #x_component normal of Root curve
+        Ny = -Tx #y component normal of Root curve
+
+        nx = Nx/(sqrt(Nx**2+Ny**2)) #x component of unit vector  
+        ny = Ny/(sqrt(Nx**2+Ny**2)) #y component of unit vector  
+        
+        x_troch = x+nx*tip_r
+        y_troch = y+ny*tip_r
+        """
+
         return points, normal
 
     def __RComparation(self, gear1, gear2, cD, alpha):
