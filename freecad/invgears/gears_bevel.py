@@ -231,7 +231,7 @@ class mainCalculations_b():
         cD.c = inputData.c
         cD.n = inputData.n
         cD.iL = inputData.iL
-
+        cD.addendum = inputData.addendum
         cD.pp = pi * cD.m
         cD.pb = cD.pp / sqrt(1 + tan(cD.rho)**2)
         cD.pd = 1 / cD.m
@@ -243,8 +243,10 @@ class mainCalculations_b():
         gear1.Rb = gear1.Rp / sqrt(1 + tan(cD.rho)**2)
 
     def __get_load_commonData2(self, cD, gear1, gear2):
-        cD.lambda_ = cD.m * sqrt(gear1.N**2 + gear2.N**2 + 2 * gear1.N * gear2.N * cos(cD.Sigma)) / (2 * sin(cD.Sigma))
-        cD.delta_c = cD.c * cD.m / cD.lambda_
+        cD.lambda_ = cD.m * sqrt(gear1.N**2 + gear2.N**2 + 2 * gear1.N * gear2.N * cos(cD.Sigma)) / (2 * sin(cD.Sigma)) #diameter from center where gear starts or ends
+        print("lambda_ ",cD.lambda_,"sigma = ",cD.Sigma)   
+        cD.delta_c = (cD.c-(cD.addendum-1)) * cD.m / cD.lambda_
+        cD.delta_addendum = (cD.addendum-1) * cD.m / cD.lambda_
         cD.B = cD.Bl * sqrt(1 + tan(cD.rho)**2)
 
     def __get_load_gearData2(self, gear1, gear2, cD):
@@ -257,14 +259,15 @@ class mainCalculations_b():
         gear1.tb = gear1.Rb * (gear1.tp / gear1.Rp + 2 * gear1.psi_p)
 
     def __get_load_gearData3(self, gear1, cD):
-        gear1.delta_a = cD.m / cD.lambda_
-        gear1.delta_d = gear1.delta_a + cD.delta_c
-        gear1.gamma_T = gear1.gamma_p + gear1.delta_a
+        gear1.delta_a = cD.m / cD.lambda_  + cD.delta_addendum
+        gear1.delta_d = gear1.delta_a + cD.delta_c 
+        gear1.gamma_T = gear1.gamma_p + gear1.delta_a 
         gear1.gamma_root = gear1.gamma_p - gear1.delta_d
 
         gear1.RT = cD.lambda_ * sin(gear1.gamma_T)
         gear1.Rroot = cD.lambda_ * sin(gear1.gamma_root)
-    
+        print("gamma_T ",gear1.gamma_T,"gamma_root =  ",gear1.gamma_root,"addendum = ",cD.delta_addendum)   
+
     def __get_load_gearData4(self, gear1, gear2, cD):
         gear1.tpc = cD.pp - gear2.tp
         gear1.tbc = gear1.Rb * (gear1.tpc / gear1.Rp + 2 * gear1.psi_p)
@@ -342,7 +345,7 @@ class inputDataClass_b:
     deltatp: float
     n: int
     iL: float
-
+    addendum : float = 0
 
 @dataclass
 class commonData_b:

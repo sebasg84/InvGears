@@ -59,7 +59,7 @@ class MasterGear():
         addMasterProperties(fp, form[0], form[1])
 
     def execute(self, fp):
-        inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL)
+        inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL,fp.addendum_master)
         cD = commonData()
         master = gearData()
         slave = gearData()
@@ -67,6 +67,10 @@ class MasterGear():
         mainCalculations(inputData, cD, master, slave)
 
         getProfile(master, slave, cD)
+        
+        inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c_slave, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL,fp.addendum_slave)
+        mainCalculations(inputData, cD, master, slave)
+
         getProfile(slave, master, cD)
 
         loadProperties(fp, cD, master, slave)
@@ -77,6 +81,7 @@ class MasterGear():
 
         W_s = getWire(slave)
         fp.W_s = W_s
+        print("done")
 
 
 class ViewProviderSlaveGear():
@@ -107,7 +112,6 @@ class SlaveGear():
         part_slave = getPartFromFPSlave(fp)
         part_slave.addProperty('App::PropertyFloat', 'relation', 'Gear relation', 'Gear relation')
         part_slave.addProperty('App::PropertyFloat', 'global_relation', 'Gear relation', 'Gear relation from first master gear')
-
         slavePartExpressions(fp, fp_master)
 
         self.betaChanged = False
@@ -174,7 +178,7 @@ class SlaveMasterGear():
 
     def execute(self, fp):
         if self.betaChanged is False:
-            inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL)
+            inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL,fp.addendum_master)
             cD = commonData()
             master = gearData()
             slave = gearData()
@@ -291,7 +295,7 @@ class InternalGear():
         fp.addProperty('App::PropertyLength', 'extThickness', '1 - Gears Parameters', 'External thickness').extThickness = form[0].doubleSpinBox_7.text()
 
     def execute(self, fp):
-        inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL)
+        inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL,fp.addendum_master)
         cD = commonData()
         master = gearData()
         slave = gearData()
@@ -304,7 +308,7 @@ class InternalGear():
         loadProperties(fp, cD, master, slave)
       
         fp.Cs.Value = abs(master.Rs - slave.Rs)
-        fp.C.Value = abs(master.Rp - slave.Rp)
+        fp.Center_d.Value = abs(master.Rp - slave.Rp)
         fp.angle_s.Value = slave.beta0 * 180 / pi - 180 + 180 / fp.N_s
 
         W_m = getWire(master)
@@ -347,7 +351,7 @@ class MasterBevelGear():
         addMasterProperties(fp, form[0], form[1], True)
 
     def execute(self, fp):
-        inputData = inputDataClass_b(fp.m.Value, fp.rho.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.thickness.Value, fp.Sigma.Value, fp.c, fp.deltatp.Value, fp.n, fp.iL)
+        inputData = inputDataClass_b(fp.m.Value, fp.rho.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.thickness.Value, fp.Sigma.Value, fp.c, fp.deltatp.Value, fp.n, fp.iL,fp.addendum_master)
         cD = commonData_b()
         master = gearData_b()
         slave = gearData_b()
@@ -355,6 +359,9 @@ class MasterBevelGear():
         mainCalculations_b(inputData, cD, master, slave)
 
         getProfile_b(master, slave, cD)
+
+        inputData = inputDataClass_b(fp.m.Value, fp.rho.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.thickness.Value, fp.Sigma.Value, fp.c_slave, fp.deltatp.Value, fp.n, fp.iL,fp.addendum_slave)
+        mainCalculations_b(inputData, cD, master, slave)
         getProfile_b(slave, master, cD)
 
         loadProperties(fp, cD, master, slave, True)
