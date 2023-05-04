@@ -112,11 +112,11 @@ def addMasterProperties(fp, widget1, widget2, bevel=False):
         if bevel is True:
             fp.addProperty('App::PropertyAngle', 'Sigma', '1 - Gears Parameters', 'Angle between gear axes').Sigma = widget1.doubleSpinBox_6.text()
 
-        fp.addProperty('App::PropertyFloat','addendum_master', '2 - Additional Parameters', 'Addendum master').addendum_master = widget1.doubleSpinBox.value()
-        fp.addProperty('App::PropertyFloat','addendum_slave', '2 - Additional Parameters', 'Addendum slave').addendum_slave = widget1.doubleSpinBox.value()
+        fp.addProperty('App::PropertyFloat','addendum_master', '2 - Additional Parameters', 'Addendum master').addendum_master = widget2.doubleSpinBox_8.value()
+        fp.addProperty('App::PropertyFloat','addendum_slave', '2 - Additional Parameters', 'Addendum slave').addendum_slave = widget2.doubleSpinBox_9.value()
 
         fp.addProperty('App::PropertyFloat', 'c', '2 - Additional Parameters', 'dedendum Clearance master').c = widget2.doubleSpinBox.value()
-        fp.addProperty('App::PropertyFloat', 'c_slave', '2 - Additional Parameters', 'dedendum Clearance slave').c_slave = widget2.doubleSpinBox.value()
+        fp.addProperty('App::PropertyFloat', 'c_slave', '2 - Additional Parameters', 'dedendum Clearance slave').c_slave = widget2.doubleSpinBox_7.value()
 
         if bevel is False:
             fp.addProperty('App::PropertyDistance', 'deltaCs', '2 - Additional Parameters', 'Center distance offset').deltaCs = widget2.doubleSpinBox_2.text()

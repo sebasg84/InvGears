@@ -303,6 +303,9 @@ class InternalGear():
         mainCalculations(inputData, cD, master, slave, True)
 
         getProfile(master, slave, cD, True)
+        inputData = inputDataClass(fp.m.Value, fp.phi_s.Value, fp.N_m, fp.N_s, fp.Bl.Value, fp.c_slave, fp.deltaCs.Value, fp.deltatp.Value, fp.offset_m.Value, fp.offset_s.Value, fp.n, fp.iL,fp.addendum_slave)
+        mainCalculations(inputData, cD, master, slave, True)
+
         getProfile(slave, master, cD)
 
         loadProperties(fp, cD, master, slave)

@@ -32,7 +32,7 @@ from freecad.invgears.observers import SelObserver
 
 class SlaveBevelGearTaskPanel:
     def __init__(self):
-        self.form = [Gui.PySideUic.loadUi(":/ui/slaves.ui")]
+        self.form = [Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/slaves.ui")]
         self.form[0].pushButton.clicked.connect(self.attach_master_gear)
         self.sel_o = SelObserver(self.form[0].pushButton, self.form[0].lineEdit, self.form[0].label_2, True)
         self.attach_master_gear()

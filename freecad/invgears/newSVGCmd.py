@@ -32,9 +32,9 @@ from freecad.invgears.observers import SelObserver
 
 class GearsInSVGTaskPanel:
     def __init__(self):
-        widget1 = Gui.PySideUic.loadUi(":/ui/loadParameters.ui")
-        widget2 = Gui.PySideUic.loadUi(":/ui/gears.ui")
-        widget3 = Gui.PySideUic.loadUi(":/ui/additional.ui")
+        widget1 = Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/loadParameters.ui")
+        widget2 = Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/gears.ui")
+        widget3 = Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/additional.ui")
         self.form = [widget1, widget2, widget3]
         self.form[0].pushButton.clicked.connect(self.attach_master_gear)
         self.form[0].pushButton_2.clicked.connect(self.load_paramers)

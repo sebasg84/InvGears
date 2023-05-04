@@ -23,7 +23,7 @@
 
 import FreeCAD as App
 import FreeCADGui as Gui
-
+import os
 from PySide2.QtWidgets import QDialogButtonBox
 
 from freecad.invgears.featureClasses import MasterBevelGear, SlaveBevelGear, ViewProviderMasterBevelGear, ViewProviderSlaveBevelGear
@@ -31,8 +31,11 @@ from freecad.invgears.featureClasses import MasterBevelGear, SlaveBevelGear, Vie
 
 class MasterBevelGearTaskPanel:
     def __init__(self):
-        widget1 = Gui.PySideUic.loadUi(":/ui/gears.ui")
-        widget2 = Gui.PySideUic.loadUi(":/ui/additional.ui")
+        
+        #widget1 = Gui.PySideUic.loadUi("C:/Program Files/FreeCAD 0.20/Mod/InvGears/freecad/invgears/Resources/ui/gears.ui")
+        #widget2 = Gui.PySideUic.loadUi("C:/Program Files/FreeCAD 0.20/Mod/InvGears/freecad/invgears/Resources/ui/additional.ui")
+        widget1 = Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/gears.ui")
+        widget2 = Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/additional.ui")
         self.form = [widget1, widget2]
         self.form[0].doubleSpinBox_4.setEnabled(False)
         self.form[0].comboBox.currentIndexChanged.connect(self.onChanged)
@@ -53,7 +56,7 @@ class MasterBevelGearTaskPanel:
         Gui.Control.closeDialog()
 
     def open(self):
-        self.form[1].parent().hide()
+        self.form[1].parent().show()
 
     def getStandardButtons(self):
         return QDialogButtonBox.Cancel | QDialogButtonBox.Ok

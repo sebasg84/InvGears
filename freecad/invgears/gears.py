@@ -341,7 +341,7 @@ class mainCalculations():
 
     def __get_load_gearData3(self, gear1, gear2, cD):
         gear1.ap = (cD.m - (gear1.Rp - gear2.Rp - gear1.Rs + gear2.Rs - gear1.e + gear2.e) / 2) * cD.addendum
-        gear1.ap = cD.m * cD.addendum
+        #gear1.ap = cD.m * cD.addendum
         gear1.RT = gear1.Rp + gear1.ap
 
     def __get_load_gearData4(self, gear1, gear2, cD, internal=False):
