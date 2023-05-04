@@ -353,8 +353,7 @@ class mainCalculations():
             gear1.RTc = gear1.RT
 
         else:
-            gear1.RTc = gear1.RT + cD.c * cD.m 
-            gear1.RTc = gear1.Rp + cD.c * cD.m
+            gear1.RTc = gear1.Rp + (1+cD.c) * cD.m
 
         gear1.apc = gear1.RTc - gear1.Rp
 
