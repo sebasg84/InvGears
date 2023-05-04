@@ -343,7 +343,7 @@ class inputDataClass_b:
     deltatp: float
     n: int
     iL: float
-    addendum : float = 0
+    addendum : float = 1
 
 @dataclass
 class commonData_b:
