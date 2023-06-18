@@ -23,7 +23,7 @@
 
 import FreeCAD as App
 import FreeCADGui as Gui
-
+import os
 from PySide2.QtWidgets import QDialogButtonBox
 
 from freecad.invgears.featureClasses import SlaveMasterGear, ViewProviderSlaveMasterGear
@@ -32,11 +32,11 @@ from freecad.invgears.observers import SelObserver
 
 class SlaveMasterGearTaskPanel:
     def __init__(self):
-        widget1 = Gui.PySideUic.loadUi(":/ui/slaves.ui")
+        widget1 = Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/slaves.ui")
         widget1.label.setText("Angular locations of slave-master gears")
-        widget2 = Gui.PySideUic.loadUi(":/ui/separator.ui")
-        widget3 = Gui.PySideUic.loadUi(":/ui/gears.ui")
-        widget4 = Gui.PySideUic.loadUi(":/ui/additional.ui")
+        widget2 = Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/separator.ui")
+        widget3 = Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/gears.ui")
+        widget4 = Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/additional.ui")
         self.form = [widget1, widget2, widget3, widget4]
         self.form[2].comboBox.currentIndexChanged.connect(self.onChanged)
         self.form[2].label_9.hide()

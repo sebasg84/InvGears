@@ -34,7 +34,7 @@ def loadProperties(fp, cD, gear, pinion, bevel=False):
     fp.psi_p.Value = cD.psi_p * 180 / pi
     if bevel is False:
         fp.Cs.Value = cD.Cs
-        fp.C.Value = cD.C
+        fp.Center_d.Value = cD.Center_d
         fp.ps.Value = cD.ps
     fp.pp.Value = cD.pp
     fp.pb.Value = cD.pb
@@ -100,6 +100,7 @@ def addMasterProperties(fp, widget1, widget2, bevel=False):
             fp.addProperty('App::PropertyAngle', 'phi_s', '1 - Gears Parameters', 'Standard pressure angle').phi_s = widget1.doubleSpinBox_2.text()
         else:
             fp.addProperty('App::PropertyAngle', 'rho', '1 - Gears Parameters', 'Standard pressure angle').rho = widget1.doubleSpinBox_2.text()
+        
         fp.addProperty('App::PropertyInteger', 'N_m', '1 - Gears Parameters', 'Number of master gear teeth').N_m = widget1.spinBox.value()
         fp.addProperty('App::PropertyInteger', 'N_s', '1 - Gears Parameters', 'Number of slave gear teeth').N_s = widget1.spinBox_2.value()
         fp.addProperty('App::PropertyLength', 'Bl', '1 - Gears Parameters', 'Backlash along the line of action').Bl = widget1.doubleSpinBox_3.text()
@@ -111,7 +112,12 @@ def addMasterProperties(fp, widget1, widget2, bevel=False):
         if bevel is True:
             fp.addProperty('App::PropertyAngle', 'Sigma', '1 - Gears Parameters', 'Angle between gear axes').Sigma = widget1.doubleSpinBox_6.text()
 
-        fp.addProperty('App::PropertyFloat', 'c', '2 - Additional Parameters', 'Clearance / module').c = widget2.doubleSpinBox.value()
+        fp.addProperty('App::PropertyFloat','addendum_master', '2 - Additional Parameters', 'Addendum master').addendum_master = widget2.doubleSpinBox_8.value()
+        fp.addProperty('App::PropertyFloat','addendum_slave', '2 - Additional Parameters', 'Addendum slave').addendum_slave = widget2.doubleSpinBox_9.value()
+
+        fp.addProperty('App::PropertyFloat', 'c', '2 - Additional Parameters', 'dedendum Clearance master').c = widget2.doubleSpinBox.value()
+        fp.addProperty('App::PropertyFloat', 'c_slave', '2 - Additional Parameters', 'dedendum Clearance slave').c_slave = widget2.doubleSpinBox_7.value()
+
         if bevel is False:
             fp.addProperty('App::PropertyDistance', 'deltaCs', '2 - Additional Parameters', 'Center distance offset').deltaCs = widget2.doubleSpinBox_2.text()
         fp.addProperty('App::PropertyDistance', 'deltatp', '2 - Additional Parameters', 'Tooth thickness offset').deltatp = widget2.doubleSpinBox_3.text()
@@ -129,7 +135,7 @@ def addMasterProperties(fp, widget1, widget2, bevel=False):
         fp.addProperty('App::PropertyAngle', 'psi_p', '3 - Common data', 'Involute function of phi', 1)
         if bevel is False:
             fp.addProperty('App::PropertyLength', 'Cs', '3 - Common data', 'Standard center distance', 1)
-            fp.addProperty('App::PropertyLength', 'C', '3 - Common data', 'Center distance', 1)
+            fp.addProperty('App::PropertyLength', 'Center_d', '3 - Common data', 'Center distance', 1)
             fp.addProperty('App::PropertyLength', 'ps', '3 - Common data', 'Standard Circular pitch', 1)
         fp.addProperty('App::PropertyLength', 'pp', '3 - Common data', 'Circular pitch', 1)
         fp.addProperty('App::PropertyLength', 'pb', '3 - Common data', 'Base Circular pitch', 1)

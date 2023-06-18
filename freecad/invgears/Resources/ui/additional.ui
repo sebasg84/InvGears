@@ -14,6 +14,14 @@
    <string>Additional parameters</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+  
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Dedendum clearance master</string>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="1">
     <widget class="QDoubleSpinBox" name="doubleSpinBox">
      <property name="sizePolicy">
@@ -26,96 +34,99 @@
       <double>9.990000000000000</double>
      </property>
      <property name="singleStep">
-      <double>0.050000000000000</double>
+      <double>0.0010000000000000</double>
      </property>
      <property name="value">
       <double>0.250000000000000</double>
      </property>
     </widget>
    </item>
-   <item row="6" column="1">
-    <widget class="QSpinBox" name="spinBox">
-     <property name="value">
-      <number>8</number>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label_5">
+   <item row="1" column="0">
+    <widget class="QLabel" name="label">
      <property name="text">
-      <string>Offset for master gear</string>
+      <string>Dedendum clearance slave</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
-    <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
-     <property name="suffix">
-      <string> mm</string>
+   <item row="1" column="1">
+    <widget class="QDoubleSpinBox" name="doubleSpinBox_7">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximum">
+      <double>9.990000000000000</double>
      </property>
      <property name="singleStep">
-      <double>0.050000000000000</double>
+      <double>0.0010000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.250000000000000</double>
      </property>
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Tooth thickness offset</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Clearance / module</string>
+      <string>Addendum master</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="1">
+    <widget class="QDoubleSpinBox" name="doubleSpinBox_8">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximum">
+      <double>9.990000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.0010000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.0000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Addendum slave</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QDoubleSpinBox" name="doubleSpinBox_9">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximum">
+      <double>9.990000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.0010000000000000</double>
+     </property>
+     <property name="value">
+      <double>1.0000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
       <string>Center distance offset</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>Offset for slave gear</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="label_7">
-     <property name="text">
-      <string>Number of points on the curves</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
-     <property name="suffix">
-      <string> mm</string>
-     </property>
-     <property name="maximum">
-      <double>9999.989999999999782</double>
-     </property>
-     <property name="singleStep">
-      <double>0.100000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
-     <property name="suffix">
-      <string> mm</string>
-     </property>
-     <property name="singleStep">
-      <double>0.050000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
+   <item row="4" column="1">
     <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
      <property name="suffix">
       <string> mm</string>
@@ -128,14 +139,82 @@
      </property>
     </widget>
    </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Tooth thickness offset</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+     <property name="suffix">
+      <string> mm</string>
+     </property>
+     <property name="maximum">
+      <double>9999.989999999999782</double>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Offset for master gear</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
+     <property name="suffix">
+      <string> mm</string>
+     </property>
+     <property name="singleStep">
+      <double>0.050000000000000</double>
+     </property>
+    </widget>
+   </item>
    <item row="7" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Offset for slave gear</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
+     <property name="suffix">
+      <string> mm</string>
+     </property>
+     <property name="singleStep">
+      <double>0.050000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>Number of points on the curves</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QSpinBox" name="spinBox">
+     <property name="value">
+      <number>8</number>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
     <widget class="QLabel" name="label_4">
      <property name="text">
       <string>Interference (2nd Cond)</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
+   <item row="9" column="1">
     <widget class="QDoubleSpinBox" name="doubleSpinBox_6">
      <property name="decimals">
       <number>3</number>
@@ -155,10 +234,14 @@
  </widget>
  <tabstops>
   <tabstop>doubleSpinBox</tabstop>
+  <tabstop>doubleSpinBox_7</tabstop>
+  <tabstop>doubleSpinBox_8</tabstop>
+  <tabstop>doubleSpinBox_9</tabstop>
   <tabstop>doubleSpinBox_2</tabstop>
   <tabstop>doubleSpinBox_3</tabstop>
   <tabstop>doubleSpinBox_4</tabstop>
   <tabstop>doubleSpinBox_5</tabstop>
+  <tabstop>doubleSpinBox_6</tabstop>
   <tabstop>spinBox</tabstop>
   <tabstop>doubleSpinBox_6</tabstop>
  </tabstops>

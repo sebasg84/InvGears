@@ -250,6 +250,31 @@ class getProfile():
 
         gear1.tita_Rroot = tita_R[-1]
 
+        """     
+        code from my own gear generator program, allows for a counter gear with rounded tip. future work.
+
+        if G.PrShft < 0 or Gcounter.PrShft < 0:
+            A = pi/Z1-G.backlash/4+Gcounter.PrShft*tan(G.t_alpha)/G.rp+G.PrShft*tan(G.t_alpha)/G.rp
+        else:
+            A = pi/Z1-G.backlash/4
+
+        x = -(x2*cos(A+phi*(Z1/Z2+1))+y2*sin(A+phi*(Z1/Z2+1))+E*sin(A+phi))
+        y = -x2* sin(A + phi*(Z1/Z2 + 1)) + y2*cos(A + phi*(Z1/Z2 + 1)) + E*cos(A + phi) 
+        
+        #calculate derivative
+        Tx = -((Z1 + Z2)*(y2*cos(A + Z1*phi/Z2 + phi) - x2* sin(A + Z1*phi/Z2 + phi)))/Z2 - E*cos(A + phi)
+        Ty =  (-Z1/Z2 - 1)* (x2* cos(A + (phi* (Z1 + Z2))/Z2) + y2* sin(A + (phi* (Z1 + Z2))/Z2)) - E*sin(A + phi)
+        
+        Nx = Ty #x_component normal of Root curve
+        Ny = -Tx #y component normal of Root curve
+
+        nx = Nx/(sqrt(Nx**2+Ny**2)) #x component of unit vector  
+        ny = Ny/(sqrt(Nx**2+Ny**2)) #y component of unit vector  
+        
+        x_troch = x+nx*tip_r
+        y_troch = y+ny*tip_r
+        """
+
         return points, normal
 
     def __RComparation(self, gear1, gear2, cD, alpha):
@@ -307,7 +332,7 @@ class mainCalculations():
         cD.deltaCs = inputData.deltaCs
         cD.n = inputData.n
         cD.iL = inputData.iL
-        
+        cD.addendum = inputData.addendum
         cD.ps = pi * cD.m
         cD.pb = cD.ps * cos(cD.phi_s)
         cD.pd = 1 / cD.m
@@ -320,17 +345,17 @@ class mainCalculations():
         gear1.Rb = gear1.Rs * cos(cD.phi_s)
 
     def __get_load_commonData2(self, cD, gear1, gear2):
-        cD.C = (gear1.N + gear2.N) * cD.m / 2 + cD.deltaCs
+        cD.Center_d = (gear1.N + gear2.N) * cD.m / 2 + cD.deltaCs
         cD.Cs = gear1.Rs + gear2.Rs
         RbplusRb = gear1.Rb + gear2.Rb
-        cD.phi_p = arccos((RbplusRb) / cD.C)
-        cD.psi_p = sqrt((cD.C / RbplusRb)**2 - 1) - cD.phi_p
+        cD.phi_p = arccos((RbplusRb) / cD.Center_d)
+        cD.psi_p = sqrt((cD.Center_d / RbplusRb)**2 - 1) - cD.phi_p
         cD.psi_s = sqrt((cD.Cs / RbplusRb)**2 - 1) - cD.phi_s
-        cD.pp = 2 * pi * cD.C / (gear1.N + gear2.N)
+        cD.pp = 2 * pi * cD.Center_d / (gear1.N + gear2.N)
         cD.B = cD.Bl / cos(cD.phi_p)
 
     def __get_load_gearData2(self, gear1, gear2, cD, internal=False):
-        gear1.Rp = gear1.N * cD.C / (gear1.N + gear2.N)
+        gear1.Rp = gear1.N * cD.Center_d / (gear1.N + gear2.N)
         if internal is True:
             gear1.tp = (cD.pp + cD.B) / 2 + gear1.deltatp
         else:
@@ -340,7 +365,8 @@ class mainCalculations():
         gear1.e = (gear1.ts - cD.ps / 2) / (2 * tan(cD.phi_s))
 
     def __get_load_gearData3(self, gear1, gear2, cD):
-        gear1.ap = cD.m - (gear1.Rp - gear2.Rp - gear1.Rs + gear2.Rs - gear1.e + gear2.e) / 2
+        gear1.ap = (cD.m - (gear1.Rp - gear2.Rp - gear1.Rs + gear2.Rs - gear1.e + gear2.e) / 2) * cD.addendum
+        #gear1.ap = cD.m * cD.addendum
         gear1.RT = gear1.Rp + gear1.ap
 
     def __get_load_gearData4(self, gear1, gear2, cD, internal=False):
@@ -350,11 +376,13 @@ class mainCalculations():
 
         if internal:
             gear1.RTc = gear1.RT
+
         else:
-            gear1.RTc = gear1.RT + cD.c * cD.m
+            gear1.RTc = gear1.Rp + (1+cD.c) * cD.m
+
         gear1.apc = gear1.RTc - gear1.Rp
 
-        gear2.Rroot = cD.C - gear1.RTc
+        gear2.Rroot = cD.Center_d - gear1.RTc
 
         gear1.phi_Tc = arccos(gear1.Rb / gear1.RTc)
         gear1.psi_Tc = sqrt(gear1.RTc**2 - gear1.Rb**2) / gear1.Rb - gear1.phi_Tc
@@ -367,13 +395,13 @@ class mainCalculations():
             gear1.ThirdCond = False
 
     def __get_load_gearData5(self, gear1, gear2, cD):
-        if (cD.C**2 - gear1.Rb**2 - 2 * gear1.Rb * gear2.Rb - gear2.RT**2) > 0:
+        if (cD.Center_d**2 - gear1.Rb**2 - 2 * gear1.Rb * gear2.Rb - gear2.RT**2) > 0:
             gear1.FirstCond = True
         else:
             gear1.FirstCond = False
         RbplusRb = gear1.Rb + gear2.Rb
-        gear1.RL = sqrt(gear1.Rb**2 + (sqrt(cD.C**2 - (RbplusRb)**2) - sqrt(gear2.RT**2 - gear2.Rb**2))**2)
-        gear1.Rf = sqrt(gear1.Rb**2 + (sqrt(cD.C**2 - (RbplusRb)**2) - sqrt(gear2.RTc**2 - gear2.Rb**2))**2)
+        gear1.RL = sqrt(gear1.Rb**2 + (sqrt(cD.Center_d**2 - (RbplusRb)**2) - sqrt(gear2.RT**2 - gear2.Rb**2))**2)
+        gear1.Rf = sqrt(gear1.Rb**2 + (sqrt(cD.Center_d**2 - (RbplusRb)**2) - sqrt(gear2.RTc**2 - gear2.Rb**2))**2)
         if gear1.Rf < gear1.RL - cD.iL * cD.m:
             gear1.SecondCond = True
         else:
@@ -399,7 +427,7 @@ class mainCalculations():
                 cD.mc = mc2
         if gear1.FirstCond and gear2.FirstCond:
             RbplusRb = gear1.Rb + gear2.Rb
-            cD.mc = (sqrt(gear1.RT**2 - gear1.Rb**2) + sqrt(gear2.RT**2 - gear2.Rb**2) - sqrt(cD.C**2 - (RbplusRb)**2)) / cD.pb
+            cD.mc = (sqrt(gear1.RT**2 - gear1.Rb**2) + sqrt(gear2.RT**2 - gear2.Rb**2) - sqrt(cD.Center_d**2 - (RbplusRb)**2)) / cD.pb
 
         if cD.mc > 1.4:
             cD.fourthCond = True
@@ -411,7 +439,7 @@ class mainCalculations():
         psi_R = sqrt(R**2 - gear1.Rb**2) / gear1.Rb - phi_R
         tita_R = gear1.tb / (2 * gear1.Rb) - psi_R
 
-        betac = arccos((cD.C**2 + gear2.RTc**2 - R**2) / (2 * cD.C * gear2.RTc)) - gear2.tita_Tc
+        betac = arccos((cD.Center_d**2 + gear2.RTc**2 - R**2) / (2 * cD.Center_d * gear2.RTc)) - gear2.tita_Tc
         betag = - (gear2.Rs * betac + cD.ps / 2) / gear1.Rs
         tita_R_a = - arcsin((gear2.RTc / R) * sin(betac + gear2.tita_Tc)) - betag
 
@@ -432,6 +460,7 @@ class inputDataClass:
     offset_s: float
     n: int
     iL: float
+    addendum : float = 1
 
 @dataclass
 class commonData:
@@ -446,7 +475,7 @@ class commonData:
     # Involute function of phi_s (rad)
     psi_s: float = 0.0
     # Center Distance (mm)
-    C: float = 0.0
+    Center_d: float = 0.0
     # Center Standard Distance (mm)
     Cs: float = 0.0
     # Center Distance offset (mm)

@@ -23,6 +23,7 @@
 
 import FreeCAD as App
 import FreeCADGui as Gui
+import os
 
 from PySide2.QtWidgets import QDialogButtonBox
 from freecad.invgears.featureClasses import MasterGear, SlaveGear, ViewProviderMasterGear, ViewProviderSlaveGear
@@ -30,9 +31,10 @@ from freecad.invgears.featureClasses import MasterGear, SlaveGear, ViewProviderM
 
 class MasterGearTaskPanel:
     def __init__(self):
-        widget1 = Gui.PySideUic.loadUi(":/ui/gears.ui")
-        widget2 = Gui.PySideUic.loadUi(":/ui/additional.ui")
+        widget1 = Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/gears.ui")
+        widget2 = Gui.PySideUic.loadUi(f"{os.path.split(__file__)[0]}/Resources/ui/additional.ui")
         self.form = [widget1, widget2]
+        print(self.form)
         self.form[0].doubleSpinBox_4.setEnabled(False)
         self.form[0].comboBox.currentIndexChanged.connect(self.onChanged)
         self.form[0].label_9.hide()

@@ -21,16 +21,16 @@
 # *                                                                         *
 # ***************************************************************************
 from freecad.invgears.functions import getPartFromFPMaster, getPartFromFPSlave, getPartFromFPBevelSlave
-
+from math import sin
 
 def slavePartExpressions(fp, fp_master):
+    Center_distance_name = f"{fp_master.Name}.Center_d"
     part_master = getPartFromFPMaster(fp_master)
     part_slave = getPartFromFPSlave(fp)
 
     x = f"{part_master.Name}.Placement.Base.x"
     y = f"{part_master.Name}.Placement.Base.y"
     z = f"{part_master.Name}.Placement.Base.z"
-    C = f"{fp_master.Name}.C"
 
     N_m = f"{fp_master.Name}.N_m"
     N_s = f"{fp_master.Name}.N_s"
@@ -42,6 +42,7 @@ def slavePartExpressions(fp, fp_master):
         masterRotation = f"{part_master.Name}.masterRotation"
         slaveAngularPosition = f"{part_master.Name}.slaveAngularPosition"
     elif fp_master.Proxy.Type == "slaveMasterGear":
+
         masterRotation = f"{part_master.Name}.Placement.Rotation.Angle"
         master_beta = f"{fp_master.Name}.beta"
         part_Previusmaster = getPartFromFPMaster(fp_master.fp_master)
@@ -63,9 +64,11 @@ def slavePartExpressions(fp, fp_master):
                 break
         slaveAngularPosition = f"({part_master.Name}.slaveAngularPosition + {slaveAngularPositions} + {master_beta})"
 
+
     beta = f"{fp.Name}.beta"
-    xp = f"{x} + {C} * cos({beta} + {slaveAngularPosition})"
-    yp = f"{y} + {C} * sin({beta} + {slaveAngularPosition})"
+    xp = f"{x} + {Center_distance_name} * cos({beta} + {slaveAngularPosition})"
+    yp = f"{y} + {Center_distance_name} * sin({beta} + {slaveAngularPosition})"
+
     if fp_master.Proxy.Type == "slaveMasterGear":
         hseparator = f"{fp_master.Name}.hseparator"
         if fp_master.hseparator.Value < 0.0:
@@ -96,6 +99,8 @@ def slaveBevelPartExpressions(fp, fp_master):
             part_master = part
     masterRotation = f"{part_master.Name}.masterRotation"
     slaveAngularPosition = f"{part_master.Name}.slaveAngularPosition"
+
+
     N_m = f"{fp_master.Name}.N_m"
     N_s = f"{fp_master.Name}.N_s"
 
