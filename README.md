@@ -93,7 +93,7 @@ Copy InvGears folder into `/Users/username/Library/Preferences/FreeCAD/Mod/` whe
 
 ## Acknowledgments
 
-I want to thank the Telegram group ["FreeCAD en español"](https://t.me/FreeCAD_Es), and give a special thanks to Maxi, Juan Manuel, and Pepe for their suggestions and corrections
+I want to thank the Telegram group ["FreeCAD en castellano"](https://t.me/FreeCAD_Es), and give a special thanks to Maxi, Juan Manuel, and Pepe for their suggestions and corrections
 
 ---------------------------------------------------------
 
@@ -188,4 +188,4 @@ Copie la carpeta InvGears en `/Users/username/Library/Preferences/FreeCAD/Mod/` 
 
 ## Agradecimientos
 
-Quiero agradecer al grupo de Telegram ["FreeCAD en español"](https://t.me/FreeCAD_Es), y dar un especial agradecimientoa  Maxi, Juan Manuel y Pepe por sus sugerencias y correcciones.
+Quiero agradecer al grupo de Telegram ["FreeCAD en castellano"](https://t.me/FreeCAD_Es), y dar un especial agradecimiento a  Maxi, Juan Manuel y Pepe por sus sugerencias y correcciones.
