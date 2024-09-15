@@ -22,7 +22,7 @@
 # ***************************************************************************
 
 from dataclasses import dataclass
-from numpy import NaN, pi, sqrt, sin, cos, tan, arcsin, arccos, arctan, linspace, array, size, dot, ones, copysign
+from numpy import nan, pi, sqrt, sin, cos, tan, arcsin, arccos, arctan, linspace, array, size, dot, ones, copysign
 from numpy.core.shape_base import hstack, vstack
 from numpy.linalg import norm
 
@@ -313,8 +313,8 @@ class mainCalculations_b():
             gear1.gamma_c = gear1.gamma_u
             gear1.Rc = gear1.Ru
         else:
-            gear1.gamma_u = NaN
-            gear1.Ru = NaN
+            gear1.gamma_u = nan
+            gear1.Ru = nan
             gear1.gamma_c = gear1.gamma_f
             gear1.Rc = gear1.Rf
 
