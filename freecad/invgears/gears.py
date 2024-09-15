@@ -22,7 +22,7 @@
 # ***************************************************************************
 
 from dataclasses import dataclass
-from numpy import NaN, pi, sqrt, sin, cos, tan, arcsin, arccos, arctan, linspace, array, size, dot, copysign
+from numpy import nan, pi, sqrt, sin, cos, tan, arcsin, arccos, arctan, linspace, array, size, dot, copysign
 from numpy.core.shape_base import hstack, vstack
 from numpy.linalg import norm
 
@@ -412,7 +412,7 @@ class mainCalculations():
             gear1.Ru = brent(self.__titaComparation, gear1, gear2, cD, gear1.Rb, gear1.Rp)
             gear1.Rc = gear1.Ru
         else:
-            gear1.Ru = NaN
+            gear1.Ru = nan
             gear1.Rc = gear1.Rf
 
     def __get_load_commonData3(self, cD, gear1, gear2):
