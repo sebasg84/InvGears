@@ -24,7 +24,7 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide2.QtWidgets import QDialogButtonBox
+from PySide6.QtWidgets import QDialogButtonBox
 
 from freecad.invgears.featureClasses import InternalGear, SlaveGear, ViewProviderInternalGear, ViewProviderSlaveGear
 

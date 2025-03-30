@@ -24,7 +24,7 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 
-from PySide2.QtWidgets import QDialogButtonBox
+from PySide6.QtWidgets import QDialogButtonBox
 
 from freecad.invgears.featureClasses import SlaveBevelGear, ViewProviderSlaveBevelGear
 from freecad.invgears.observers import SelObserver
