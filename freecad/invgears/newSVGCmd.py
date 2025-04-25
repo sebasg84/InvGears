@@ -24,7 +24,7 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 
-from PySide6.QtWidgets import QDialogButtonBox, QFileDialog
+from PySide.QtWidgets import QDialogButtonBox, QFileDialog
 
 from freecad.invgears.svgFile import GearsInSVG
 from freecad.invgears.observers import SelObserver
