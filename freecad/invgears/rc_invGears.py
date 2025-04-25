@@ -7,7 +7,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PySide6 import QtCore
+from PySide import QtCore
 
 qt_resource_data = b"\
 \x00\x00\x06\xc7\
