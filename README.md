@@ -1,6 +1,7 @@
-## FreeCAD InvGears Workbench v0.1.2
+## FreeCAD InvGears Workbench v0.1.3
 
 ## Overview
+the 0.1.3 version is compatible with FreeCAD version 1.1 
 
 The InvGears workbench allows the creation of gear systems. The gear generation algorithm is based on [[1]](#1), which generates the involute and fillet curves. 
 
@@ -73,7 +74,9 @@ Copy InvGears folder into `/Users/username/Library/Preferences/FreeCAD/Mod/` whe
 [Tutorial #2](freecad/invgears/Resources/tutorial/tutorial2.md)
 
 ## Release notes
-
+- 2026.09.10 (0.1.3)
+    Ported to FreeCAD 1.1
+    
 - 2021.12.04 (0.1.2)
     Spherical involute gear were added
 
